@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.hbm.Tags;
 import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.NTMMaterial;
-import com.hbm.items.IModelRegister;
+import com.hbm.items.IDynamicModels;
 import com.hbm.items.ModItems;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.icon.RGBMutatorInterpolatedComponentRemap;
@@ -42,7 +42,7 @@ import static com.hbm.inventory.material.Mats.*;
 import static com.hbm.items.special.ItemBedrockOreNew.ProcessingTrait.*;
 
 //TODO: fix IDynamicModels
-public class ItemBedrockOreNew extends Item implements IModelRegister {
+public class ItemBedrockOreNew extends Item implements IDynamicModels {
 
     private static final List<ItemBedrockOreNew> INSTANCES = new ArrayList<>();
 
