@@ -2,6 +2,7 @@ package com.hbm.items;
 
 import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.renderer.color.IItemColor;
@@ -152,7 +153,11 @@ public interface IDynamicModels {
 
 
     @SideOnly(Side.CLIENT)
-    void registerModel();
+    default void registerModel() {
+        Item item = this instanceof Item item1 ? item1 : Item.getItemFromBlock((Block) this);
+        ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
+    }
+
 
     @SideOnly(Side.CLIENT)
     void registerSprite(TextureMap map);
