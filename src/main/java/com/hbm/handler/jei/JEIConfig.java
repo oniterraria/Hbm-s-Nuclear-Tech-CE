@@ -14,7 +14,6 @@ import com.hbm.items.EffectItem;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemFELCrystal.EnumWavelengths;
-import com.hbm.items.machine.ItemFluidIDMulti;
 import com.hbm.items.machine.ItemFluidIcon;
 import com.hbm.items.weapon.ItemCustomMissile;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -389,19 +388,7 @@ public class JEIConfig implements IModPlugin {
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.statue_elb_f));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.cheater_virus));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.cheater_virus_seed));
-        blacklist.addIngredientToBlacklist(new ItemStack(ModItems.chemistry_icon, 1, 0));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_helmet));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_plate));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_legs));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_boots));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.apple_euphemium));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ingot_euphemium));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.nugget_euphemium));
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_kit));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.euphemium_stopper));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.watch));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rod_quad_euphemium));
-        // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.rod_euphemium));
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.bobmazon_hidden));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.zirnox_destroyed));
         blacklist.addIngredientToBlacklist(new ItemStack(ModBlocks.machine_furnace_brick_on));
@@ -415,7 +402,6 @@ public class JEIConfig implements IModPlugin {
         }
         if (MainRegistry.polaroidID != 11) {
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_secret));
-            // blacklist.addIngredientToBlacklist(new ItemStack(ModItems.book_of_));
             blacklist.addIngredientToBlacklist(new ItemStack(ModItems.ams_core_thingy));
         }
         blacklist.addIngredientToBlacklist(new ItemStack(ModItems.achievement_icon));
