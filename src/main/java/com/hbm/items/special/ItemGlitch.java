@@ -220,12 +220,12 @@ public class ItemGlitch extends Item implements IBatteryItem, IDynamicModels {
 	}
 
 	@Override
-	public long getChargeRate() {
+	public long getChargeRate(ItemStack stack) {
 		return 0;
 	}
 
 	@Override
-	public long getDischargeRate() {
+	public long getDischargeRate(ItemStack stack) {
 		return 200;
 	}
 

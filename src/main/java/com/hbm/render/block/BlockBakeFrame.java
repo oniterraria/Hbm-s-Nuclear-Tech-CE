@@ -64,21 +64,9 @@ public class BlockBakeFrame {
 
     public BlockBakeFrame(BlockForm form, @NotNull String... textures) {
         this.textureArray = textures;
-        switch (textures.length) {
-            case 1:
-                if (form == ALL || form == ALL_UNTINTED ||
-                        form == CROSS || form == CROSS_UNTINTED ||
-                        form == CROP ||
-                        form == LAYER) break;
-            case 2:
-                if (form == PILLAR || form == PILLAR_UNTINTED) break;
-            case 3:
-                if (form == PILLAR_BOTTOM || form == PILLAR_BOTTOM_UNTINTED) break;
-            case 6:
-                if (form == FULL_CUSTOM || form == FULL_CUSTOM_UNTINTED) break;
-            default:
-                throw new IllegalArgumentException("Amount of textures provided is invalid: " + textures.length
-                        + ". The amount should be 1, 2, 3 or 6");
+        if (textures.length != form.textureNum) {
+            throw new IllegalArgumentException("Amount of textures provided is invalid for form " + form + ": " + textures.length
+                    + ". Expected " + form.textureNum + ".");
         }
         this.blockForm = form;
         this.tinted =false;
@@ -87,18 +75,9 @@ public class BlockBakeFrame {
     public BlockBakeFrame(BlockForm form, boolean tinted,@NotNull String... textures ) {
         this.textureArray = textures;
         this.tinted = tinted ;
-        switch (textures.length) {
-            case 1:
-                if (form == ALL || form == CROSS || form == CROP || form == LAYER) break;
-            case 2:
-                if (form == PILLAR) break;
-            case 3:
-                if (form == PILLAR_BOTTOM) break;
-            case 6:
-                if (form == FULL_CUSTOM) break;
-            default:
-                throw new IllegalArgumentException("Amount of textures provided is invalid: " + textures.length
-                        + ". The amount should be 1, 2, 3 or 6");
+        if (textures.length != form.textureNum) {
+            throw new IllegalArgumentException("Amount of textures provided is invalid for form " + form + ": " + textures.length
+                    + ". Expected " + form.textureNum + ".");
         }
         this.blockForm = form;
     }
@@ -168,7 +147,12 @@ public class BlockBakeFrame {
         CROSS("hbm:block/cross_tinted", "minecraft:block/cross", 1, new String[]{"cross"}),
         PILLAR("hbm:block/cube_column_tinted", "minecraft:block/cube_column", 2, new String[]{"end", "side"}),
         PILLAR_BOTTOM("hbm:block/cube_column_tinted", "minecraft:block/cube_column", 3, new String[]{"end", "side", "bottom"}),
-        FULL_CUSTOM("hbm:block/cube_tinted", "minecraft:block/cube", 6, new String[]{"up","down","north","south","west","east"});
+        FULL_CUSTOM("hbm:block/cube_tinted", "minecraft:block/cube", 6, new String[]{"up","down","north","south","west","east"}),
+        ALL_UNTINTED("minecraft:block/cube_all", "minecraft:block/cube_all", 1, new String[]{"all"}),
+        CROSS_UNTINTED("minecraft:block/cross", "minecraft:block/cross", 1, new String[]{"cross"}),
+        PILLAR_UNTINTED("minecraft:block/cube_column", "minecraft:block/cube_column", 2, new String[]{"end", "side"}),
+        PILLAR_BOTTOM_UNTINTED("minecraft:block/cube_bottom_top", "minecraft:block/cube_bottom_top", 3, new String[]{"top", "side", "bottom"}),
+        FULL_CUSTOM_UNTINTED("minecraft:block/cube", "minecraft:block/cube", 6, new String[]{"up","down","north","south","west","east"});
 
         public final String baseBakedModelTined;
         public final String baseBakedModel;

@@ -29,7 +29,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
-public class BlockMetalFence extends BlockFence implements ICustomBlockItem, IDynamicModels {
+public class BlockMetalFence extends BlockPane implements ICustomBlockItem, IDynamicModels {
 
     public static final PropertyBool FORCE_POST = PropertyBool.create("force_post");
     public static final PropertyBool PILLAR = PropertyBool.create("pillar");

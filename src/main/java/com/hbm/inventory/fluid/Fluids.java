@@ -47,41 +47,8 @@ import java.util.Map.Entry;
 public class Fluids {
 
     public static final Gson gson = new Gson();
-    public static final HashBiMap<String, FluidType> renameMapping = HashBiMap.create();
-    public static final FT_Liquid LIQUID = new FT_Liquid();
-    public static final FT_Viscous VISCOUS = new FT_Viscous();
-    public static final FT_Gaseous_ART EVAP = new FT_Gaseous_ART();
-    public static final FT_Gaseous GASEOUS = new FT_Gaseous();
-    public static final FT_Plasma PLASMA = new FT_Plasma();
-    public static final FT_Amat ANTI = new FT_Amat();
-    public static final FT_LeadContainer LEADCON = new FT_LeadContainer();
-    public static final FT_NoContainer NOCON = new FT_NoContainer();
-    public static final FT_NoID NOID = new FT_NoID();
-    public static final FT_Delicious DELICIOUS = new FT_Delicious();
-    public static final FT_Unsiphonable UNSIPHONABLE = new FT_Unsiphonable();
-    /* Burns 4x dirtier than regular fuel */
-    public static final float SOOT_UNREFINED_OIL = PollutionHandler.SOOT_PER_SECOND * 0.1F;
-    /* Original baseline, used for most fuels */
-    public static final float SOOT_REFINED_OIL = PollutionHandler.SOOT_PER_SECOND * 0.025F;
-    /* Gasses burn very cleanly */
-    public static final float SOOT_GAS = PollutionHandler.SOOT_PER_SECOND * 0.005F;
-    /* Original baseline for leaded fuels */
-    public static final float LEAD_FUEL = PollutionHandler.HEAVY_METAL_PER_SECOND * 0.025F;
-    /* Poison stat for most petrochemicals */
-    public static final float POISON_OIL = PollutionHandler.POISON_PER_SECOND * 0.0025F;
-    /* Poison stat for horrible chemicals like red mud or phosgene */
-    public static final float POISON_EXTREME = PollutionHandler.POISON_PER_SECOND * 0.025F;
-    /* Poison stat for mostly inert things like carbon dioxide */
-    public static final float POISON_MINOR = PollutionHandler.POISON_PER_SECOND * 0.001F;
-    public static final FT_Polluting P_OIL = new FT_Polluting().burn(PollutionHandler.PollutionType.SOOT, SOOT_UNREFINED_OIL).release(PollutionHandler.PollutionType.POISON, POISON_OIL);
-    public static final FT_Polluting P_FUEL = new FT_Polluting().burn(PollutionHandler.PollutionType.SOOT, SOOT_REFINED_OIL).release(PollutionHandler.PollutionType.POISON, POISON_OIL);
-    public static final FT_Polluting P_FUEL_LEADED = new FT_Polluting().burn(PollutionHandler.PollutionType.SOOT, SOOT_REFINED_OIL).burn(PollutionHandler.PollutionType.HEAVYMETAL, LEAD_FUEL).release(PollutionHandler.PollutionType.POISON, POISON_OIL).release(PollutionHandler.PollutionType.HEAVYMETAL, LEAD_FUEL * 0.1F);
-    public static final FT_Polluting P_GAS = new FT_Polluting().burn(PollutionHandler.PollutionType.SOOT, SOOT_GAS);
-    public static final FT_Polluting P_LIQUID_GAS = new FT_Polluting().burn(PollutionHandler.PollutionType.SOOT, SOOT_GAS * 2F);
-    protected static final List<FluidType> registerOrder = new ArrayList();
-    protected static final List<FluidType> metaOrder = new ArrayList();
-    private static final HashMap<Integer, FluidType> idMapping = new HashMap();
-    private static final HashMap<String, FluidType> nameMapping = new HashMap();
+    public static List<IFluidRegisterListener> additionalListeners = new ArrayList<>();
+
     public static final IItemColor GENERIC_COLOR_HANLDER = (stack, tintIndex) -> {
         if (tintIndex == 1) {
             return Fluids.fromID(stack.getMetadata()).getColor();
