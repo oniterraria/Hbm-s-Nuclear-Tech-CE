@@ -5,6 +5,7 @@ import com.hbm.api.block.IBlockSideRotation;
 import com.hbm.api.block.IToolable;
 import com.hbm.blocks.ITooltipProvider;
 import com.hbm.items.IDynamicModels;
+import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemTooling;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.model.CraneBakedModel;
@@ -98,7 +99,8 @@ public abstract class BlockCraneBase extends BlockContainer implements IToolable
 
     @Override
     public boolean onBlockActivated(@NotNull World worldIn, @NotNull BlockPos pos, @NotNull IBlockState state, EntityPlayer playerIn, @NotNull EnumHand hand, @NotNull EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(playerIn.getHeldItem(hand).getItem() instanceof ItemTooling) {
+        Item heldItem = playerIn.getHeldItem(hand).getItem();
+        if (heldItem instanceof ItemTooling || heldItem == ModItems.conveyor_wand) {
             return false;
         } else if(worldIn.isRemote) {
             return true;

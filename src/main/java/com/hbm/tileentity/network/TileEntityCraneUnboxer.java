@@ -12,9 +12,7 @@ import com.hbm.util.SoundUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -93,8 +91,8 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
                     }
                 }
 
-                EnumFacing inputSide = getOutputSide(); // note the switcheroo!
-                Block b = world.getBlockState(pos.offset(inputSide)).getBlock();
+                EnumFacing outputSide = getInputSide(); // note the switcheroo!
+                Block b = world.getBlockState(pos.offset(outputSide)).getBlock();
 
                 if (b instanceof IConveyorBelt belt) {
 
@@ -111,8 +109,8 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
                             cStack.setCount(toSend);
 
                             EntityMovingItem moving = new EntityMovingItem(world);
-                            Vec3d pos = new Vec3d(xCoord + 0.5 + inputSide.getDirectionVec().getX() * 0.55, yCoord + 0.5 + inputSide.getDirectionVec().getY() * 0.55, zCoord + 0.5 + inputSide.getDirectionVec().getZ() * 0.55);
-                            Vec3d snap = belt.getClosestSnappingPosition(world, new BlockPos(xCoord + inputSide.getDirectionVec().getX(), yCoord + inputSide.getDirectionVec().getY(), zCoord + inputSide.getDirectionVec().getZ()), pos);
+                            Vec3d pos = new Vec3d(xCoord + 0.5 + outputSide.getDirectionVec().getX() * 0.55, yCoord + 0.5 + outputSide.getDirectionVec().getY() * 0.55, zCoord + 0.5 + outputSide.getDirectionVec().getZ() * 0.55);
+                            Vec3d snap = belt.getClosestSnappingPosition(world, new BlockPos(xCoord + outputSide.getDirectionVec().getX(), yCoord + outputSide.getDirectionVec().getY(), zCoord + outputSide.getDirectionVec().getZ()), pos);
                             moving.setPosition(snap.x, snap.y, snap.z);
                             moving.setItemStack(cStack);
                             world.spawnEntity(moving);
@@ -133,11 +131,14 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
         if(stack.isEmpty())
             return false;
 
+        boolean movedAny = false;
+
         for(int i: allowed_slots) {
 
+            if(stack.isEmpty() || stack.getCount() == 0)
+                break;
+
             ItemStack outputStack = stack.copy();
-            if(outputStack.isEmpty() || outputStack.getCount() == 0)
-                return true;
 
             ItemStack chestItem = chest.getStackInSlot(i).copy();
             if(chestItem.isEmpty() || (Library.areItemStacksCompatible(outputStack, chestItem, false) && chestItem.getCount() < chestItem.getMaxStackSize())) {
@@ -146,14 +147,15 @@ public class TileEntityCraneUnboxer extends TileEntityCraneBase implements IGUIP
                 outputStack.setCount(fillAmount);
 
                 ItemStack rest = chest.insertItem(i, outputStack, true);
-                if(rest.getItem() == Item.getItemFromBlock(Blocks.AIR)){
+                if(rest.isEmpty()){
                     stack.shrink(outputStack.getCount());
                     chest.insertItem(i, outputStack, false);
+                    movedAny = true;
                 }
             }
         }
 
-        return false;
+        return movedAny;
     }
 
     @Override

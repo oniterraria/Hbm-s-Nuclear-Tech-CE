@@ -12,9 +12,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -30,13 +28,11 @@ import org.jetbrains.annotations.NotNull;
 public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIProvider, IControlReceiver {
 
     public byte mode = 0;
-    public static final byte MODE_1 = 0;
-    public static final byte MODE_2 = 1;
-    public static final byte MODE_4 = 2;
-    public static final byte MODE_8 = 3;
-    public static final byte MODE_16 = 4;
-    public static final byte MODE_REDSTONE = 5;
-    private int tickCounter = 0;
+    public static final byte MODE_4 = 0;
+    public static final byte MODE_8 = 1;
+    public static final byte MODE_16 = 2;
+    public static final byte MODE_REDSTONE = 3;
+    private static final int MODE_VERSION = 1;
 
     public static int[] allowed_slots = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
 
@@ -56,15 +52,12 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
     public void update() {
         super.update();
         if (!world.isRemote) {
-            tickCounter++;
-
             int xCoord = pos.getX();
             int yCoord = pos.getY();
             int zCoord = pos.getZ();
             boolean redstone = world.isBlockPowered(pos);
 
-            if (mode == MODE_REDSTONE && redstone && !lastRedstone && tickCounter%10==0) {
-                tickCounter = 0;
+            if (mode == MODE_REDSTONE && redstone && !lastRedstone) {
                 EnumFacing outputSide = getOutputSide();
                 BlockPos outputPos = pos.offset(outputSide);
                 Block outputBlock = world.getBlockState(outputPos).getBlock();
@@ -109,15 +102,12 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
 
             this.lastRedstone = redstone;
 
-            if(mode != MODE_REDSTONE && tickCounter%10==0) {
-                tickCounter = 0;
+            if(mode != MODE_REDSTONE && world.getTotalWorldTime() % 2 == 0) {
                 int pack = switch (mode) {
-                    case MODE_1 -> 1;
-                    case MODE_2 -> 2;
                     case MODE_4 -> 4;
                     case MODE_8 -> 8;
                     case MODE_16 -> 16;
-                    default -> 0;
+                    default -> 1;
                 };
 
                 int fullStacks = 0;
@@ -176,11 +166,14 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
         if(stack.isEmpty())
             return false;
 
+        boolean movedAny = false;
+
         for(int i = 0; i < chest.getSlots(); i++) {
 
+            if(stack.isEmpty() || stack.getCount() == 0)
+                break;
+
             ItemStack outputStack = stack.copy();
-            if(outputStack.isEmpty() || outputStack.getCount() == 0)
-                return true;
 
             ItemStack chestItem = chest.getStackInSlot(i).copy();
             if(chestItem.isEmpty() || (Library.areItemStacksCompatible(outputStack, chestItem, false) && chestItem.getCount() < chestItem.getMaxStackSize())) {
@@ -189,14 +182,15 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
                 outputStack.setCount(fillAmount);
 
                 ItemStack rest = chest.insertItem(i, outputStack, true);
-                if(rest.getItem() == Item.getItemFromBlock(Blocks.AIR)){
+                if(rest.isEmpty()){
                     stack.shrink(outputStack.getCount());
                     chest.insertItem(i, outputStack, false);
+                    movedAny = true;
                 }
             }
         }
 
-        return false;
+        return movedAny;
     }
 
     @Override
@@ -226,7 +220,8 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        this.mode = nbt.getByte("mode");
+        byte storedMode = nbt.getByte("mode");
+        this.mode = nbt.hasKey("boxerModeVersion") ? normalizeCurrentMode(storedMode) : convertLegacyMode(storedMode);
         this.lastRedstone = nbt.getBoolean("lastRedstone");
     }
 
@@ -234,6 +229,7 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
     public @NotNull NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
         nbt.setByte("mode", mode);
+        nbt.setInteger("boxerModeVersion", MODE_VERSION);
         nbt.setBoolean("lastRedstone", lastRedstone);
         return nbt;
     }
@@ -241,7 +237,7 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
     @Override
     public void receiveControl(NBTTagCompound data) {
         if(data.hasKey("toggle")) {
-            mode = (byte) ((mode + 1) % 6);
+            mode = (byte) ((mode + 1) % 4);
         }
     }
 
@@ -252,6 +248,22 @@ public class TileEntityCraneBoxer extends TileEntityCraneBase implements IGUIPro
 
     @Override
     public void deserialize(ByteBuf buf) {
-        this.mode = buf.readByte();
+        this.mode = normalizeCurrentMode(buf.readByte());
+    }
+
+    private static byte normalizeCurrentMode(byte rawMode) {
+        if(rawMode < MODE_4 || rawMode > MODE_REDSTONE) {
+            return MODE_4;
+        }
+        return rawMode;
+    }
+
+    private static byte convertLegacyMode(byte legacyMode) {
+        return switch (legacyMode) {
+            case 3 -> MODE_8;
+            case 4 -> MODE_16;
+            case 5 -> MODE_REDSTONE;
+            default -> MODE_4;
+        };
     }
 }

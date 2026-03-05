@@ -66,12 +66,11 @@ public class CraneBoxer extends BlockCraneBase implements IEnterableBlock {
     public void onItemEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorItem entity) {
         BlockPos pos = new BlockPos(x, y, z);
         ItemStack toAdd = entity.getItemStack().copy();
-        boolean worked = false;
         TileEntity tileEntity = world.getTileEntity(pos);
         if (tileEntity instanceof TileEntityCraneBoxer) {
-            worked = ((TileEntityCraneBoxer)tileEntity).tryFillTeDirect(toAdd);
+            ((TileEntityCraneBoxer)tileEntity).tryFillTeDirect(toAdd);
 
-            if ((toAdd != null && toAdd.getCount() > 0) || !worked) {
+            if(!toAdd.isEmpty()) {
                 EntityItem drop = new EntityItem(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, toAdd.copy());
                 world.spawnEntity(drop);
             }
@@ -80,11 +79,30 @@ public class CraneBoxer extends BlockCraneBase implements IEnterableBlock {
 
     @Override
     public boolean canPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) {
-        return false;
+        return true;
     }
 
     @Override
-    public void onPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) { }
+    public void onPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) {
+        if (entity == null || entity.getItemStacks() == null || entity.getItemStacks().length == 0) {
+            return;
+        }
+
+        TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+        if (!(te instanceof TileEntityCraneBoxer boxer)) return;
+
+        for (ItemStack stack : entity.getItemStacks()) {
+            if (stack == null || stack.isEmpty() || stack.getCount() <= 0) continue;
+
+            ItemStack toAdd = stack.copy();
+            boxer.tryFillTeDirect(toAdd);
+
+            if (!toAdd.isEmpty()) {
+                EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, toAdd.copy());
+                world.spawnEntity(drop);
+            }
+        }
+    }
 
 
     @Override

@@ -131,10 +131,11 @@ public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIP
 
     public boolean tryFillTe(ItemStack stack){
         EnumFacing outputSide = getOutputSide();
+        EnumFacing accessSide = outputSide.getOpposite();
         TileEntity te = world.getTileEntity(pos.offset(outputSide));
         if (te != null) {
-            if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outputSide)) {
-                IItemHandler cap = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, outputSide);
+            if (te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide)) {
+                IItemHandler cap = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, accessSide);
 
                 return tryInsertItemCap(cap, stack);
             }

@@ -63,24 +63,21 @@ public class CraneUnboxer extends BlockCraneBase implements IEnterableBlock {
 
     @Override
     public boolean canPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) {
-        BlockPos pos = new BlockPos(x, y, z);
-        IBlockState state = world.getBlockState(pos);
-        EnumFacing orientation = state.getValue(FACING);
-        return dir == orientation;
+        TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+        return te instanceof TileEntityCraneBase crane && crane.getOutputSide() == dir;
     }
 
     @Override
     public void onPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.getTileEntity(pos);
-        boolean worked;
         if (te instanceof TileEntityCraneUnboxer) {
 
             for (ItemStack stack : entity.getItemStacks()) {
                 if(stack == null || stack.isEmpty()) continue;
-                worked = ((TileEntityCraneUnboxer)te).tryFillTeDirect(stack);
+                ((TileEntityCraneUnboxer)te).tryFillTeDirect(stack);
 
-                if (stack.getCount() > 0 || !worked) {
+                if (!stack.isEmpty()) {
                     EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, stack.copy());
                     world.spawnEntity(drop);
                 }

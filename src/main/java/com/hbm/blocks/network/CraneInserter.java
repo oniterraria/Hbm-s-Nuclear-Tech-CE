@@ -72,23 +72,42 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
         ItemStack toAdd = entity.getItemStack().copy();
         
         TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
-        boolean worked = false;
-        if(te instanceof TileEntityCraneInserter)
-            worked = ((TileEntityCraneInserter)te).tryFillTeDirect(toAdd);
+        if(te instanceof TileEntityCraneInserter inserter) {
+            boolean worked = inserter.tryFillTeDirect(toAdd);
 
-        if(!worked) {
-            EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, toAdd.copy());
-            world.spawnEntity(drop);
+            if ((!worked || !toAdd.isEmpty()) && !inserter.destroyer) {
+                EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, toAdd.copy());
+                world.spawnEntity(drop);
+            }
         }
     }
 
     @Override
     public boolean canPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) {
-        return false;
+        return true;
     }
 
     @Override
-    public void onPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) { }
+    public void onPackageEnter(World world, int x, int y, int z, EnumFacing dir, IConveyorPackage entity) {
+        if (entity == null || entity.getItemStacks() == null || entity.getItemStacks().length == 0) {
+            return;
+        }
+
+        TileEntity te = world.getTileEntity(new BlockPos(x, y, z));
+        if (!(te instanceof TileEntityCraneInserter inserter)) return;
+
+        for (ItemStack stack : entity.getItemStacks()) {
+            if (stack == null || stack.isEmpty() || stack.getCount() <= 0) continue;
+
+            ItemStack toAdd = stack.copy();
+            boolean worked = inserter.tryFillTeDirect(toAdd);
+
+            if ((!worked || !toAdd.isEmpty()) && !inserter.destroyer) {
+                EntityItem drop = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, toAdd.copy());
+                world.spawnEntity(drop);
+            }
+        }
+    }
 
     @Override
     public void breakBlock(World world, @NotNull BlockPos pos, @NotNull IBlockState state) {
