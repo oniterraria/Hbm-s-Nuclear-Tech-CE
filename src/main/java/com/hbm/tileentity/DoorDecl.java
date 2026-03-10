@@ -1086,6 +1086,7 @@ public abstract class DoorDecl {
 	private List<ResourceLocation> skins;
 
 	/// A little modification shouldn't hurt
+	/// I made this List instead of arrays for easier modification with add-ons.
 	/// -Leafia
 	public final List<ResourceLocation> getSEDNASkins() {
 		if (hasSkins() && skins == null)
@@ -1120,6 +1121,7 @@ public abstract class DoorDecl {
 	/// For item rendering
 	public ResourceLocation getCyclingSkins() {
 		List<ResourceLocation> skins = this.getSEDNASkins();
+		if (skins == null) return null;
 		int index = (int) ((Clock.get_ms() % (skins.size() * 1000)) / 1000);
 		return skins.get(index);
 	}
