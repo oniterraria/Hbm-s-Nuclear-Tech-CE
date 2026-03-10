@@ -15,12 +15,14 @@ import com.hbm.render.loader.IModelCustomNamed;
 import com.hbm.render.tileentity.door.IRenderDoors;
 import com.hbm.tileentity.DoorDecl;
 import com.hbm.tileentity.TileEntityDoorGeneric;
+import com.hbm.util.Clock;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -89,12 +91,11 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 		IRenderDoors sednaRenderer = door.getSEDNARenderer();
 
 		if(sednaRenderer != null) {
-
-			GL11.glEnable(GL11.GL_CULL_FACE);
-			GL11.glShadeModel(GL11.GL_SMOOTH);
+			GlStateManager.enableCull();
+			GlStateManager.shadeModel(GL11.GL_SMOOTH);
 			sednaRenderer.render(te, buf);
-			GL11.glShadeModel(GL11.GL_FLAT);
-
+			GlStateManager.shadeModel(GL11.GL_FLAT);
+			GlStateManager.disableCull();
 		} else {
 			AnimatedModel animModel = door.getAnimatedModel();
 			if (animModel != null) {
@@ -162,9 +163,9 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 		door.getOrigin(name, orig);
 		door.getRotation(name, openTicks, rot);
 		GlStateManager.translate(orig[0], orig[1], orig[2]);
-		if (rot[0] != 0) GL11.glRotated(rot[0], 1, 0, 0);
-		if (rot[1] != 0) GL11.glRotated(rot[1], 0, 1, 0);
-		if (rot[2] != 0) GL11.glRotated(rot[2], 0, 0, 1);
+		if (rot[0] != 0) GlStateManager.rotate(rot[0], 1, 0, 0);
+		if (rot[1] != 0) GlStateManager.rotate(rot[1], 0, 1, 0);
+		if (rot[2] != 0) GlStateManager.rotate(rot[2], 0, 0, 1);
 		GlStateManager.translate(-orig[0] + tran[0], -orig[1] + tran[1], -orig[2] + tran[2]);
 	}
 
@@ -176,6 +177,7 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 	@Override
 	public Item[] getItemsForRenderer() {
 		return new Item[]{
+				Item.getItemFromBlock(ModBlocks.vault_door),
 				Item.getItemFromBlock(ModBlocks.large_vehicle_door),
 				Item.getItemFromBlock(ModBlocks.water_door),
 				Item.getItemFromBlock(ModBlocks.qe_containment),
@@ -194,7 +196,37 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 	@Override
 	public ItemRenderBase getRenderer(Item item) {
 
-		if (item == Item.getItemFromBlock(ModBlocks.large_vehicle_door)) {
+		if (item == Item.getItemFromBlock(ModBlocks.vault_door)) {
+			return new ItemRenderBase() {
+				public void renderInventory() {
+					GlStateManager.translate(0, -3, 0);
+					GlStateManager.scale(3.5, 3.5, 3.5);
+				}
+				public void renderCommon() {
+					GlStateManager.translate(0, -1, 0);
+					int index = (int) ((Clock.get_ms() % (DoorDecl.VAULT_DOOR.getSkinCount() * 1000)) / 1000);
+
+					ResourceLocation doorTex = ResourceManager.pheo_vault_door_3;
+					ResourceLocation labelTex = ResourceManager.pheo_label_101;
+
+					switch(index) {
+					case 1: labelTex = ResourceManager.pheo_label_87; break;
+					case 2: labelTex = ResourceManager.pheo_label_106; break;
+					case 3: doorTex = ResourceManager.pheo_vault_door_4; labelTex = ResourceManager.pheo_label_81; break;
+					case 4: doorTex = ResourceManager.pheo_vault_door_4; labelTex = ResourceManager.pheo_label_111; break;
+					case 5: doorTex = ResourceManager.pheo_vault_door_s; labelTex = ResourceManager.pheo_label_2; break;
+					case 6: doorTex = ResourceManager.pheo_vault_door_s; labelTex = ResourceManager.pheo_label_99; break;
+					}
+
+					bindTexture(doorTex);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
+					ResourceManager.pheo_vault_door.renderPart("Door");
+					bindTexture(labelTex);
+					ResourceManager.pheo_vault_door.renderPart("Label");
+					GlStateManager.shadeModel(GL11.GL_FLAT);
+				}
+			};
+		} else if (item == Item.getItemFromBlock(ModBlocks.large_vehicle_door)) {
 			return new ItemRenderBase() {
 				public void renderInventory() {
 					GlStateManager.translate(0, -4, 0);
@@ -202,12 +234,12 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				}
 
 				public void renderCommon() {
-					GL11.glRotated(90, 0, 1, 0);
-					GL11.glTranslated(0, 0.5, 0);
+					GlStateManager.rotate(90, 0, 1, 0);
+					GlStateManager.translate(0, 0.5, 0);
 					bindTexture(ResourceManager.pheo_vehicle_door_tex);
-					GL11.glShadeModel(GL11.GL_SMOOTH);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_vehicle_door.renderAll();
-					GL11.glShadeModel(GL11.GL_FLAT);
+					GlStateManager.shadeModel(GL11.GL_FLAT);
 				}
 			};
 		} else if (item == Item.getItemFromBlock(ModBlocks.water_door)) {
@@ -218,11 +250,11 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				}
 
 				public void renderCommon() {
-					GL11.glRotated(90, 0, 1, 0);
+					GlStateManager.rotate(90, 0, 1, 0);
 					bindTexture(DoorDecl.WATER_DOOR.getCyclingSkins());
-					GL11.glShadeModel(GL11.GL_SMOOTH);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_water_door.renderAll();
-					GL11.glShadeModel(GL11.GL_FLAT);
+					GlStateManager.shadeModel(GL11.GL_FLAT);
 				}
 			};
 		} else if (item == Item.getItemFromBlock(ModBlocks.qe_containment)) {
@@ -234,9 +266,9 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 
 				public void renderCommon() {
 					bindTexture(DoorDecl.QE_CONTAINMENT.getCyclingSkins());
-					GL11.glShadeModel(GL11.GL_SMOOTH);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_containment_door.renderAll();
-					GL11.glShadeModel(GL11.GL_FLAT);
+					GlStateManager.shadeModel(GL11.GL_FLAT);
 				}
 			};
 		} else if (item == Item.getItemFromBlock(ModBlocks.qe_sliding_door)) {
@@ -248,9 +280,9 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 
 				public void renderCommon() {
 					bindTexture(ResourceManager.pheo_sliding_door_tex);
-					GL11.glShadeModel(GL11.GL_SMOOTH);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_sliding_door.renderAll();
-					GL11.glShadeModel(GL11.GL_FLAT);
+					GlStateManager.shadeModel(GL11.GL_FLAT);
 				}
 			};
 		} else if (item == Item.getItemFromBlock(ModBlocks.fire_door)) {
@@ -261,11 +293,11 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				}
 
 				public void renderCommon() {
-					GL11.glRotated(90, 0, 1, 0);
+					GlStateManager.rotate(90, 0, 1, 0);
 					bindTexture(DoorDecl.FIRE_DOOR.getCyclingSkins());
-					GL11.glShadeModel(GL11.GL_SMOOTH);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_fire_door.renderAll();
-					GL11.glShadeModel(GL11.GL_FLAT);
+					GlStateManager.shadeModel(GL11.GL_FLAT);
 				}
 			};
 		} else if (item == Item.getItemFromBlock(ModBlocks.small_hatch)) {
@@ -276,7 +308,7 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				}
 
 				public void renderCommon() {
-					GL11.glRotated(90, 0, 1, 0);
+					GlStateManager.rotate(90, 0, 1, 0);
 					bindTexture(ResourceManager.small_hatch_tex);
 					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.small_hatch.renderAll();
@@ -306,12 +338,12 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				}
 
 				public void renderCommon() {
-					GL11.glTranslated(0, 1, 0);
-					GL11.glRotated(90, 0, 2, 0);
+					GlStateManager.translate(0, 1, 0);
+					GlStateManager.rotate(90, 0, 1, 0);
 					bindTexture(DoorDecl.SECURE_ACCESS_DOOR.getCyclingSkins());
-					GL11.glShadeModel(GL11.GL_SMOOTH);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_secure_door.renderAll();
-					GL11.glShadeModel(GL11.GL_FLAT);
+					GlStateManager.shadeModel(GL11.GL_FLAT);
 				}
 			};
 		} else if (item == Item.getItemFromBlock(ModBlocks.sliding_seal_door)) {
@@ -323,9 +355,9 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 
 				public void renderCommon() {
 					bindTexture(ResourceManager.pheo_seal_door_tex);
-					GL11.glShadeModel(GL11.GL_SMOOTH);
+					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_seal_door.renderAll();
-					GL11.glShadeModel(GL11.GL_FLAT);
+					GlStateManager.shadeModel(GL11.GL_FLAT);
 				}
 			};
 		} else if (item == Item.getItemFromBlock(ModBlocks.sliding_gate_door)) {

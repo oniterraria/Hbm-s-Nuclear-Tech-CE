@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 @AutoRegister
 public class TileEntityDoorGeneric extends TileEntityLockableBase implements ITickable, IAnimatedDoor, IControllable {
@@ -44,7 +45,7 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase implements ITi
     public long animStartTime = 0;
     public boolean shouldUseBB = false;
     protected DoorDecl doorType;
-    private int openTicks = 0;
+    public int openTicks = 0;
     private int redstonePower;
     private AudioWrapper audio;
     private AudioWrapper audio2;
@@ -64,6 +65,10 @@ public class TileEntityDoorGeneric extends TileEntityLockableBase implements ITi
     public void update() {
         if (getDoorType() == null && this.getBlockType() instanceof BlockDoorGeneric)
             setDoorType(((BlockDoorGeneric) this.getBlockType()).type);
+        Consumer<TileEntityDoorGeneric> update = getDoorType().onDoorUpdate();
+        if (update != null) {
+            update.accept(this);
+        }
         if (state == DoorState.OPENING) {
             openTicks++;
             if (openTicks >= getDoorType().timeToOpen()) {

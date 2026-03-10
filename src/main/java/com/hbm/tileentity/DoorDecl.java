@@ -18,6 +18,7 @@ import com.hbm.util.Clock;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
@@ -116,6 +117,71 @@ public abstract class DoorDecl {
 		public IModelCustomNamed getModel(){
 			return null;
 		}
+	};
+
+	public static final DoorDecl VAULT_DOOR = new DoorDecl() {
+
+		@Override
+		public IRenderDoors getSEDNARenderer() {
+			return RenderVaultDoor.INSTANCE;
+		}
+
+		@Override
+		public BusAnimationSedna getBusAnimation(DoorState state, byte skinIndex) {
+			if(state == DoorState.OPENING) return new BusAnimationSedna()
+					.addBus("PULL", new BusAnimationSequenceSedna().setPos(0, 0, 0).addPos(0, 0, 1, 2_000, IType.SIN_FULL))
+					.addBus("SLIDE", new BusAnimationSequenceSedna().addPos(0, 0, 0, 2_000).addPos(1, 0, 0, 4_000));
+			if(state == DoorState.CLOSING) return new BusAnimationSedna()
+					.addBus("PULL", new BusAnimationSequenceSedna().setPos(0, 0, 1).addPos(0, 0, 1, 4_000).addPos(0, 0, 0, 2_000, IType.SIN_FULL))
+					.addBus("SLIDE", new BusAnimationSequenceSedna().setPos(1, 0, 0).addPos(0, 0, 0, 4_000));
+			return null;
+		}
+
+		@Override
+		public boolean hasSkins() {
+			return true;
+		}
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		protected ResourceLocation[] getDefaultSkins() {
+			return new ResourceLocation[] {
+					ResourceManager.pheo_label_101,
+					ResourceManager.pheo_label_87,
+					ResourceManager.pheo_label_106,
+					ResourceManager.pheo_label_81,
+					ResourceManager.pheo_label_111,
+					ResourceManager.pheo_label_2,
+					ResourceManager.pheo_label_99
+			};
+		}
+
+		@Override public int timeToOpen() { return 120; }
+		@Override public int[][] getDoorOpenRanges() { return new int[][] { { -1, 1, 0, 3, 3, 2 } }; }
+		@Override public int[] getDimensions() { return new int[] { 4, 0, 0, 0, 2, 2 }; }
+		@Override public int[][] getExtraDimensions() { return new int[][] { { 0, 0, 1, -1, 2, 2 } }; }
+
+		@Override
+		public AxisAlignedBB getBlockBound(BlockPos relPos, boolean open) {
+			if(!open || relPos.getY() == 0) return Block.FULL_BLOCK_AABB;
+			return super.getBlockBound(relPos, open);
+		}
+
+		public Consumer<TileEntityDoorGeneric> onUpdate = door -> {
+			if(door.getWorld().isRemote) return;
+
+			if(door.state == DoorState.OPENING) {
+				if(door.openTicks == 0) door.getWorld().playSound(null, door.getPos(), HBMSoundHandler.vaultScrapeNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				for(int i = 45; i <= 115; i += 10)
+					if(door.openTicks == i) door.getWorld().playSound(null, door.getPos(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			} else if(door.state == DoorState.CLOSING) {
+				if(door.openTicks == 30) door.getWorld().playSound(null, door.getPos(), HBMSoundHandler.vaultScrapeNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				for(int i = 45; i <= 115; i += 10)
+					if(door.openTicks == i) door.getWorld().playSound(null, door.getPos(), HBMSoundHandler.vaultThudNew, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			}
+		};
+
+		@Override public Consumer<TileEntityDoorGeneric> onDoorUpdate() { return onUpdate; }
 	};
 	
 	public static final DoorDecl SLIDING_SEAL_DOOR = new DoorDecl(){
@@ -451,7 +517,7 @@ public abstract class DoorDecl {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void doOffsetTransform() {
-			GL11.glRotated(-90, 0, 1, 0);
+			GlStateManager.rotate(-90, 0, 1, 0);
 		};
 		
 		@Override
@@ -895,6 +961,8 @@ public abstract class DoorDecl {
 	public abstract int[][] getDoorOpenRanges();
 	
 	public abstract int[] getDimensions();
+
+	public int[][] getExtraDimensions() { return null; }
 	
 	public float getDoorRangeOpenTime(int ticks, int idx){
 		return getNormTime(ticks);

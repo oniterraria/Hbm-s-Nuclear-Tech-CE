@@ -3,12 +3,11 @@ package com.hbm.render.tileentity.door;
 import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
-import org.lwjgl.opengl.GL11;
-
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.TileEntityDoorGeneric;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderVaultDoor implements IRenderDoors {
@@ -50,11 +49,11 @@ public class RenderVaultDoor implements IRenderDoors {
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(doorTex);
 		ResourceManager.pheo_vault_door.renderPart("Frame");
-		GL11.glTranslated(-pull, 0, 0);
-		GL11.glTranslated(0, 0, slide);
-		GL11.glTranslated(0, 2.5, 0);
-		GL11.glRotated(roll, 1, 0, 0);
-		GL11.glTranslated(0, -2.5, 0);
+		GlStateManager.translate(-pull, 0, 0);
+		GlStateManager.translate(0, 0, slide);
+		GlStateManager.translate(0, 2.5, 0);
+		GlStateManager.rotate((float) roll, 1, 0, 0);
+		GlStateManager.translate(0, -2.5, 0);
 		ResourceManager.pheo_vault_door.renderPart("Door");
 		Minecraft.getMinecraft().getTextureManager().bindTexture(labelTex);
 		ResourceManager.pheo_vault_door.renderPart("Label");

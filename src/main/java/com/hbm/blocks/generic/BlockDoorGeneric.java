@@ -3,6 +3,7 @@ package com.hbm.blocks.generic;
 import com.hbm.api.block.IToolable;
 import com.hbm.api.block.IToolable.ToolType;
 import com.hbm.blocks.BlockDummyable;
+import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.handler.radiation.RadiationSystemNT;
 import com.hbm.interfaces.IBomb;
 import com.hbm.interfaces.IDoor;
@@ -81,6 +82,30 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 	@Override
 	public int getOffset(){
 		return type.getBlockOffset();
+	}
+
+	@Override
+	public boolean checkRequirement(World world, int x, int y, int z, ForgeDirection dir, int o) {
+		if (!super.checkRequirement(world, x, y, z, dir, o)) {
+			return false;
+		}
+
+		if(type.getExtraDimensions() != null) for(int[] dims : type.getExtraDimensions()) {
+			if (!MultiblockHandlerXR.checkSpace(world, x + dir.offsetX * o, y + dir.offsetY * o, z + dir.offsetZ * o, dims, x, y, z, dir)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public void fillSpace(World world, int x, int y, int z, ForgeDirection dir, int o) {
+		MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o, y + dir.offsetY * o, z + dir.offsetZ * o, getDimensions(), this, dir);
+
+		if(type.getExtraDimensions() != null) for(int[] dims : type.getExtraDimensions()) {
+			MultiblockHandlerXR.fillSpace(world, x + dir.offsetX * o, y + dir.offsetY * o, z + dir.offsetZ * o, dims, this, dir);
+		}
 	}
 
 	@Override

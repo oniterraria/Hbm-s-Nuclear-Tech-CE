@@ -3,13 +3,12 @@ package com.hbm.render.tileentity.door;
 import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
-import org.lwjgl.opengl.GL11;
-
 import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.DoorDecl;
 import com.hbm.tileentity.TileEntityDoorGeneric;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 
 public class RenderFireDoor implements IRenderDoors {
@@ -29,10 +28,10 @@ public class RenderFireDoor implements IRenderDoors {
 			raise = IRenderDoors.getRelevantTransformation("DOOR", door.currentAnimation)[1] * maxRaise;
 		}
 
-		GL11.glRotated(90, 0, 1, 0);
-		GL11.glTranslated(-0.5, 0, 0);
+		GlStateManager.rotate(90, 0, 1, 0);
+		GlStateManager.translate(-0.5, 0, 0);
 		ResourceManager.pheo_fire_door.renderPart("Frame");
-		GL11.glTranslated(0, MathHelper.clamp(raise, 0, maxRaise), 0);
+		GlStateManager.translate(0, MathHelper.clamp(raise, 0, maxRaise), 0);
 		ResourceManager.pheo_fire_door.renderPart("Door");
 	}
 }

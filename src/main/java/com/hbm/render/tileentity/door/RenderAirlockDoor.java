@@ -3,6 +3,7 @@ package com.hbm.render.tileentity.door;
 import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -29,8 +30,8 @@ public class RenderAirlockDoor implements IRenderDoors {
 			open = IRenderDoors.getRelevantTransformation("DOOR", door.currentAnimation)[1] * maxOpen;
 		}
 
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glTranslated(0, 0, 0.5);
+		GlStateManager.disableCull();
+		GlStateManager.translate(0, 0, 0.5);
 		ResourceManager.pheo_airlock_door.renderPart("Frame");
 		
 		GL11.glEnable(GL11.GL_CLIP_PLANE0);
@@ -41,15 +42,15 @@ public class RenderAirlockDoor implements IRenderDoors {
 		buf.put(new double[] { 0.0, 0.0, -1, 1.999 }); buf.rewind();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE1, buf);
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(0, 0, MathHelper.clamp(open, 0, maxOpen));
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0, MathHelper.clamp(open, 0, maxOpen));
 		ResourceManager.pheo_airlock_door.renderPart("Left");
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(0, 0, -MathHelper.clamp(open, 0, maxOpen));
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0, -MathHelper.clamp(open, 0, maxOpen));
 		ResourceManager.pheo_airlock_door.renderPart("Right");
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		GL11.glDisable(GL11.GL_CLIP_PLANE0);
 		GL11.glDisable(GL11.GL_CLIP_PLANE1);

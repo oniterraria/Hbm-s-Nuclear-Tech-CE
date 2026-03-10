@@ -3,6 +3,7 @@ package com.hbm.render.tileentity.door;
 import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
@@ -28,8 +29,8 @@ public class RenderVehicleDoor implements IRenderDoors {
 			open = IRenderDoors.getRelevantTransformation("DOOR", door.currentAnimation)[1] * maxOpen;
 		}
 
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glRotated(90, 0, 1, 0);
+		GlStateManager.disableCull();
+		GlStateManager.rotate(90, 0, 1, 0);
 		ResourceManager.pheo_vehicle_door.renderPart("Frame");
 		
 		GL11.glEnable(GL11.GL_CLIP_PLANE0);
@@ -40,15 +41,15 @@ public class RenderVehicleDoor implements IRenderDoors {
 		buf.put(new double[] { -1, 0 ,0, 3.4375 }); buf.rewind();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE1, buf);
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(-MathHelper.clamp(open, 0, maxOpen), 0, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(-MathHelper.clamp(open, 0, maxOpen), 0, 0);
 		ResourceManager.pheo_vehicle_door.renderPart("Left");
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 		
-		GL11.glPushMatrix();
-		GL11.glTranslated(MathHelper.clamp(open, 0, maxOpen), 0, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(MathHelper.clamp(open, 0, maxOpen), 0, 0);
 		ResourceManager.pheo_vehicle_door.renderPart("Right");
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		GL11.glDisable(GL11.GL_CLIP_PLANE0);
 		GL11.glDisable(GL11.GL_CLIP_PLANE1);

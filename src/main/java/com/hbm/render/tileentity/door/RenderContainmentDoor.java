@@ -3,6 +3,7 @@ package com.hbm.render.tileentity.door;
 import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.main.ResourceManager;
@@ -29,14 +30,14 @@ public class RenderContainmentDoor implements IRenderDoors {
 			raise = IRenderDoors.getRelevantTransformation("DOOR", door.currentAnimation)[1] * maxRaise;
 		}
 
-		GL11.glTranslated(0.25, 0.0, 0.0);
+		GlStateManager.translate(0.25, 0.0, 0.0);
 		ResourceManager.pheo_containment_door.renderPart("Frame");
 		
 		GL11.glEnable(GL11.GL_CLIP_PLANE0);
 		buf.put(new double[] { 0, -1, 0, 3 }); buf.rewind();
 		GL11.glClipPlane(GL11.GL_CLIP_PLANE0, buf);
 		
-		GL11.glTranslated(0, MathHelper.clamp(raise, 0, maxRaise), 0);
+		GlStateManager.translate(0, MathHelper.clamp(raise, 0, maxRaise), 0);
 		ResourceManager.pheo_containment_door.renderPart("Door");
 		
 		GL11.glDisable(GL11.GL_CLIP_PLANE0);
