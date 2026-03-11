@@ -4,6 +4,7 @@ import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
 import com.hbm.main.ResourceManager;
+import com.hbm.tileentity.DoorDecl.DefaultSkins;
 import com.hbm.tileentity.TileEntityDoorGeneric;
 
 import net.minecraft.client.Minecraft;
@@ -17,7 +18,7 @@ public class RenderSlidingDoor implements IRenderDoors {
 	@Override
 	public void render(TileEntityDoorGeneric door, DoubleBuffer buf) {
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.pheo_sliding_door_tex);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(DefaultSkins.pheo_sliding_door_tex);
 		
 		double maxOpen = 0.95;
 		double open = 0;

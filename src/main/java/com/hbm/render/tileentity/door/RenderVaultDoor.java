@@ -4,6 +4,7 @@ import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
 import com.hbm.main.ResourceManager;
+import com.hbm.tileentity.DoorDecl.DefaultSkins;
 import com.hbm.tileentity.TileEntityDoorGeneric;
 
 import net.minecraft.client.Minecraft;
@@ -17,16 +18,16 @@ public class RenderVaultDoor implements IRenderDoors {
 	@Override
 	public void render(TileEntityDoorGeneric door, DoubleBuffer buf) {
 
-		ResourceLocation doorTex = ResourceManager.pheo_vault_door_3;
-		ResourceLocation labelTex = ResourceManager.pheo_label_101;
+		ResourceLocation doorTex = DefaultSkins.pheo_vault_door_3;
+		ResourceLocation labelTex = DefaultSkins.pheo_label_101;
 		
 		switch(door.getSkinIndex()) {
-		case 1: labelTex = ResourceManager.pheo_label_87; break;
-		case 2: labelTex = ResourceManager.pheo_label_106; break;
-		case 3: doorTex = ResourceManager.pheo_vault_door_4; labelTex = ResourceManager.pheo_label_81; break;
-		case 4: doorTex = ResourceManager.pheo_vault_door_4; labelTex = ResourceManager.pheo_label_111; break;
-		case 5: doorTex = ResourceManager.pheo_vault_door_s; labelTex = ResourceManager.pheo_label_2; break;
-		case 6: doorTex = ResourceManager.pheo_vault_door_s; labelTex = ResourceManager.pheo_label_99; break;
+		case 1: labelTex = DefaultSkins.pheo_label_87; break;
+		case 2: labelTex = DefaultSkins.pheo_label_106; break;
+		case 3: doorTex = DefaultSkins.pheo_vault_door_4; labelTex = DefaultSkins.pheo_label_81; break;
+		case 4: doorTex = DefaultSkins.pheo_vault_door_4; labelTex = DefaultSkins.pheo_label_111; break;
+		case 5: doorTex = DefaultSkins.pheo_vault_door_s; labelTex = DefaultSkins.pheo_label_2; break;
+		case 6: doorTex = DefaultSkins.pheo_vault_door_s; labelTex = DefaultSkins.pheo_label_99; break;
 		}
 		
 		double pull = 0;

@@ -255,13 +255,7 @@ public class BlockDoorGeneric extends BlockDummyable implements IRadResistantBlo
 		if(hardness > 50){
 			tooltip.add("§6" + I18nUtil.resolveKey("trait.blastres", hardness));
 		}
-		/*if (hasSkins == null) {
-			hasSkins = false;
-			TileEntity te = createNewTileEntity(player,12);
-			if (te instanceof TileEntityDoorGeneric door)
-				hasSkins = door.getDoorType().hasSkins();
-		}
-		if (hasSkins)*/ // fuck off man
+		if (type.hasSkins()) // Leafia: oh my god im so stupid i could just do this
 			tooltip.add(I18nUtil.resolveKey("desc.doors_skin"));
 	}
 

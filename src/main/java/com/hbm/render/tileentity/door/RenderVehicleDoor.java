@@ -3,6 +3,7 @@ package com.hbm.render.tileentity.door;
 import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
+import com.hbm.tileentity.DoorDecl.DefaultSkins;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
@@ -19,7 +20,7 @@ public class RenderVehicleDoor implements IRenderDoors {
 	@Override
 	public void render(TileEntityDoorGeneric door, DoubleBuffer buf) {
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.pheo_vehicle_door_tex);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(DefaultSkins.pheo_vehicle_door_tex);
 		
 		double maxOpen = 3;
 		double open = 0;

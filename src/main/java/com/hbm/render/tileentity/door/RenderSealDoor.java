@@ -3,6 +3,7 @@ package com.hbm.render.tileentity.door;
 import java.nio.DoubleBuffer;
 
 import com.hbm.interfaces.IDoor.DoorState;
+import com.hbm.tileentity.DoorDecl.DefaultSkins;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
 
@@ -20,7 +21,7 @@ public class RenderSealDoor implements IRenderDoors {
 	@Override
 	public void render(TileEntityDoorGeneric door, DoubleBuffer buf) {
 		
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.pheo_seal_door_tex);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(DefaultSkins.pheo_seal_door_tex);
 		
 		double maxRaise = 1;
 		double raise = 0;

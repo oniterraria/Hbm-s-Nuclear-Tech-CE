@@ -1,12 +1,12 @@
 package com.hbm.tileentity;
 
+import com.hbm.Tags;
 import com.hbm.animloader.AnimatedModel;
 import com.hbm.animloader.Animation;
 import com.hbm.interfaces.IDoor.DoorState;
 import com.hbm.lib.HBMSoundHandler;
 import com.hbm.lib.Library;
 import com.hbm.main.ResourceManager;
-import com.hbm.render.anim.BusAnimationSequence;
 import com.hbm.render.anim.sedna.BusAnimationKeyframeSedna.IType;
 import com.hbm.render.anim.sedna.BusAnimationSedna;
 import com.hbm.render.anim.sedna.BusAnimationSequenceSedna;
@@ -23,7 +23,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11; import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,6 +32,36 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class DoorDecl {
+
+	/// For keeping addon support
+	public static class DefaultSkins {
+		public static final ResourceLocation pheo_fire_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/fire_door.png");
+		public static final ResourceLocation pheo_fire_door_black_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/fire_door_black.png");
+		public static final ResourceLocation pheo_fire_door_orange_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/fire_door_orange.png");
+		public static final ResourceLocation pheo_airlock_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/airlock_door.png");
+		public static final ResourceLocation pheo_airlock_door_clean_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/airlock_door_clean.png");
+		public static final ResourceLocation pheo_airlock_door_green_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/airlock_door_green.png");
+		public static final ResourceLocation pheo_blast_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/blast_door.png");
+		public static final ResourceLocation pheo_containment_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/containment_door.png");
+		public static final ResourceLocation pheo_containment_door_trefoil_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/containment_door_trefoil.png");
+		public static final ResourceLocation pheo_seal_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/seal_door.png");
+		public static final ResourceLocation pheo_secure_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/secure_door.png");
+		public static final ResourceLocation pheo_secure_door_grey_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/secure_door_grey.png");
+		public static final ResourceLocation pheo_sliding_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/sliding_door.png");
+		public static final ResourceLocation pheo_vehicle_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vehicle_door.png");
+		public static final ResourceLocation pheo_water_door_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/water_door.png");
+		public static final ResourceLocation pheo_water_door_clean_tex = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/water_door_clean.png");
+		public static final ResourceLocation pheo_vault_door_3 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/vault_door_3.png");
+		public static final ResourceLocation pheo_vault_door_4 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/vault_door_4.png");
+		public static final ResourceLocation pheo_vault_door_s = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/vault_door_s.png");
+		public static final ResourceLocation pheo_label_2 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/label_2.png");
+		public static final ResourceLocation pheo_label_81 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/label_81.png");
+		public static final ResourceLocation pheo_label_87 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/label_87.png");
+		public static final ResourceLocation pheo_label_99 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/label_99.png");
+		public static final ResourceLocation pheo_label_101 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/label_101.png");
+		public static final ResourceLocation pheo_label_106 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/label_106.png");
+		public static final ResourceLocation pheo_label_111 = new ResourceLocation(Tags.MODID, "textures/models/pheodoors/vault/label_111.png");
+	}
 
 	public DoorDecl() {
 		if (hasSkins())
@@ -143,16 +173,15 @@ public abstract class DoorDecl {
 		}
 
 		@Override
-		@SideOnly(Side.CLIENT)
 		protected ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
-					ResourceManager.pheo_label_101,
-					ResourceManager.pheo_label_87,
-					ResourceManager.pheo_label_106,
-					ResourceManager.pheo_label_81,
-					ResourceManager.pheo_label_111,
-					ResourceManager.pheo_label_2,
-					ResourceManager.pheo_label_99
+					DefaultSkins.pheo_label_101,
+					DefaultSkins.pheo_label_87,
+					DefaultSkins.pheo_label_106,
+					DefaultSkins.pheo_label_81,
+					DefaultSkins.pheo_label_111,
+					DefaultSkins.pheo_label_2,
+					DefaultSkins.pheo_label_99
 			};
 		}
 
@@ -353,10 +382,10 @@ public abstract class DoorDecl {
 			}
 		};
 
-		@Override @SideOnly(Side.CLIENT) public ResourceLocation[] getDefaultSkins() {
+		@Override public ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
-					ResourceManager.pheo_secure_door_tex,
-					ResourceManager.pheo_secure_door_grey_tex
+					DefaultSkins.pheo_secure_door_tex,
+					DefaultSkins.pheo_secure_door_grey_tex
 			};
 		}
 
@@ -394,12 +423,12 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@Override @SideOnly(Side.CLIENT)
+		@Override
 		protected ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[]{
-					ResourceManager.pheo_airlock_door_tex,
-					ResourceManager.pheo_airlock_door_clean_tex,
-					ResourceManager.pheo_airlock_door_green_tex
+					DefaultSkins.pheo_airlock_door_tex,
+					DefaultSkins.pheo_airlock_door_clean_tex,
+					DefaultSkins.pheo_airlock_door_green_tex
 			};
 		}
 
@@ -572,11 +601,11 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@SideOnly(Side.CLIENT) @Override public ResourceLocation[] getDefaultSkins() {
+		@Override public ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
-					ResourceManager.pheo_fire_door_tex,
-					ResourceManager.pheo_fire_door_black_tex,
-					ResourceManager.pheo_fire_door_orange_tex,
+					DefaultSkins.pheo_fire_door_tex,
+					DefaultSkins.pheo_fire_door_black_tex,
+					DefaultSkins.pheo_fire_door_orange_tex,
 			};
 		}
 
@@ -688,10 +717,10 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@SideOnly(Side.CLIENT) @Override public ResourceLocation[] getDefaultSkins() {
+		@Override public ResourceLocation[] getDefaultSkins() {
 			return new ResourceLocation[] {
-					ResourceManager.pheo_containment_door_tex,
-					ResourceManager.pheo_containment_door_trefoil_tex
+					DefaultSkins.pheo_containment_door_tex,
+					DefaultSkins.pheo_containment_door_trefoil_tex
 			};
 		}
 
@@ -762,10 +791,10 @@ public abstract class DoorDecl {
 			return null;
 		}
 
-		@SideOnly(Side.CLIENT) @Override public ResourceLocation[] getDefaultSkins() {
+		@Override public ResourceLocation[] getDefaultSkins() {
 			return  new ResourceLocation[] {
-					ResourceManager.pheo_water_door_tex,
-					ResourceManager.pheo_water_door_clean_tex
+					DefaultSkins.pheo_water_door_tex,
+					DefaultSkins.pheo_water_door_clean_tex
 			};
 		}
 

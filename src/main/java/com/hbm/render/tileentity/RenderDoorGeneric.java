@@ -14,6 +14,7 @@ import com.hbm.render.item.ItemRenderBase;
 import com.hbm.render.loader.IModelCustomNamed;
 import com.hbm.render.tileentity.door.IRenderDoors;
 import com.hbm.tileentity.DoorDecl;
+import com.hbm.tileentity.DoorDecl.DefaultSkins;
 import com.hbm.tileentity.TileEntityDoorGeneric;
 import com.hbm.util.Clock;
 import net.minecraft.client.renderer.GLAllocation;
@@ -206,16 +207,16 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 					GlStateManager.translate(0, -1, 0);
 					int index = (int) ((Clock.get_ms() % (DoorDecl.VAULT_DOOR.getSkinCount() * 1000)) / 1000);
 
-					ResourceLocation doorTex = ResourceManager.pheo_vault_door_3;
-					ResourceLocation labelTex = ResourceManager.pheo_label_101;
+					ResourceLocation doorTex = DefaultSkins.pheo_vault_door_3;
+					ResourceLocation labelTex = DefaultSkins.pheo_label_101;
 
 					switch(index) {
-					case 1: labelTex = ResourceManager.pheo_label_87; break;
-					case 2: labelTex = ResourceManager.pheo_label_106; break;
-					case 3: doorTex = ResourceManager.pheo_vault_door_4; labelTex = ResourceManager.pheo_label_81; break;
-					case 4: doorTex = ResourceManager.pheo_vault_door_4; labelTex = ResourceManager.pheo_label_111; break;
-					case 5: doorTex = ResourceManager.pheo_vault_door_s; labelTex = ResourceManager.pheo_label_2; break;
-					case 6: doorTex = ResourceManager.pheo_vault_door_s; labelTex = ResourceManager.pheo_label_99; break;
+					case 1: labelTex = DefaultSkins.pheo_label_87; break;
+					case 2: labelTex = DefaultSkins.pheo_label_106; break;
+					case 3: doorTex = DefaultSkins.pheo_vault_door_4; labelTex = DefaultSkins.pheo_label_81; break;
+					case 4: doorTex = DefaultSkins.pheo_vault_door_4; labelTex = DefaultSkins.pheo_label_111; break;
+					case 5: doorTex = DefaultSkins.pheo_vault_door_s; labelTex = DefaultSkins.pheo_label_2; break;
+					case 6: doorTex = DefaultSkins.pheo_vault_door_s; labelTex = DefaultSkins.pheo_label_99; break;
 					}
 
 					bindTexture(doorTex);
@@ -236,7 +237,10 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				public void renderCommon() {
 					GlStateManager.rotate(90, 0, 1, 0);
 					GlStateManager.translate(0, 0.5, 0);
-					bindTexture(ResourceManager.pheo_vehicle_door_tex);
+					if (DoorDecl.LARGE_VEHICLE_DOOR.hasSkins())
+						bindTexture(DoorDecl.LARGE_VEHICLE_DOOR.getCyclingSkins());
+					else
+						bindTexture(DefaultSkins.pheo_vehicle_door_tex);
 					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_vehicle_door.renderAll();
 					GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -279,7 +283,10 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				}
 
 				public void renderCommon() {
-					bindTexture(ResourceManager.pheo_sliding_door_tex);
+					if (DoorDecl.SLIDING_SEAL_DOOR.hasSkins())
+						bindTexture(DoorDecl.SLIDING_SEAL_DOOR.getCyclingSkins());
+					else
+						bindTexture(DefaultSkins.pheo_sliding_door_tex);
 					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_sliding_door.renderAll();
 					GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -354,7 +361,7 @@ public class RenderDoorGeneric extends TileEntitySpecialRenderer<TileEntityDoorG
 				}
 
 				public void renderCommon() {
-					bindTexture(ResourceManager.pheo_seal_door_tex);
+					bindTexture(DefaultSkins.pheo_seal_door_tex);
 					GlStateManager.shadeModel(GL11.GL_SMOOTH);
 					ResourceManager.pheo_seal_door.renderAll();
 					GlStateManager.shadeModel(GL11.GL_FLAT);
