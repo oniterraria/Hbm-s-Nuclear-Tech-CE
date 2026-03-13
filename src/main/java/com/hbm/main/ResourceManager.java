@@ -443,6 +443,7 @@ public class ResourceManager {
     //IGen
     public static final IModelCustom igen = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/igen.obj")).asVBO();
     //Combustion Engine
+    public static final IModelCustom dieselgen = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/dieselgen.obj")).asVBO();
     public static final IModelCustom combustion_engine = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/combustion_engine.obj")).asVBO();
     //Firebox, and the lot
     public static final IModelCustom sawmill = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/machines/sawmill.obj")).asVBO();
@@ -856,6 +857,7 @@ public class ResourceManager {
     public static final ResourceLocation igen_arm = new ResourceLocation(Tags.MODID, "textures/models/machines/igen_arm.png");
     public static final ResourceLocation igen_pistons = new ResourceLocation(Tags.MODID, "textures/models/machines/igen_pistons.png");
     //Combustion Engine
+    public static final ResourceLocation dieselgen_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/dieselgen.png");
     public static final ResourceLocation combustion_engine_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/combustion_engine.png");
     //Firebox and the lot
     public static final ResourceLocation sawmill_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/sawmill.png");

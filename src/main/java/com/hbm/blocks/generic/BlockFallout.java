@@ -26,16 +26,16 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class BlockPowder extends Block {
+public class BlockFallout extends Block {
 
     public static final PropertyInteger META = PropertyInteger.create("meta", 0, 6);
 
-    public BlockPowder(Material mat, SoundType soundType, String s) {
+    public BlockFallout(Material mat, String s) {
         super(mat);
-        this.setTranslationKey(s);
-        this.setRegistryName(s);
-        this.setSoundType(soundType);
-        this.setHarvestLevel("shovel", 0);
+        setTranslationKey(s);
+        setRegistryName(s);
+        setSoundType(SoundType.GROUND);
+        setHarvestLevel("shovel", 0);
 
         ModBlocks.ALL_BLOCKS.add(this);
     }
