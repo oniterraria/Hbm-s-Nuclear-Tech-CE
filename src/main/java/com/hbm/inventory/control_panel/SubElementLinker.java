@@ -49,6 +49,7 @@ public class SubElementLinker extends SubElement {
 		cont = gui.addButton(new GuiButton(gui.currentButtonId(), cX-60, cY+6, 170, 20, "Continue"));
 
 		super.initGui();
+		refreshButtons();
 	}
 	
 	@Override

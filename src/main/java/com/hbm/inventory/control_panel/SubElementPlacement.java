@@ -5,6 +5,7 @@ import com.hbm.inventory.control_panel.controls.DialLarge;
 import com.hbm.inventory.control_panel.controls.DisplaySevenSeg;
 import com.hbm.inventory.control_panel.controls.DisplayText;
 import com.hbm.inventory.control_panel.controls.Label;
+import com.hbm.inventory.control_panel.nodes.Node;
 import com.hbm.main.ClientProxy;
 import com.hbm.main.ResourceManager;
 import com.hbm.render.NTMRenderHelper;
@@ -15,12 +16,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.EnumDyeColor;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+
+import java.util.Map.Entry;
 
 public class SubElementPlacement extends SubElement {
 
@@ -327,6 +331,56 @@ public class SubElementPlacement extends SubElement {
 			gui.control.panel.controls.remove(selectedControl);
 			selectedControl = null;
 		}
+	}
+
+	@Override
+	protected void keyTyped(char typedChar,int code) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			if (gui.currentEditControl != null) return;
+			if (code == Keyboard.KEY_A) { // Add new
+				gui.isEditMode = false;
+				gui.pushElement(gui.choice);
+			} else if (code == Keyboard.KEY_D && selectedControl != null) { // Duplicate
+				Control control = ControlRegistry.getNew(selectedControl.registryName,gui.control.panel);
+
+				gui.control.panel.controls.add(control); // temporarily add
+				for (Entry<String,DataValue> entry : selectedControl.getConfigs().entrySet())
+					control.getConfigs().put(entry.getKey(),entry.getValue());
+				control.connectedSet.addAll(selectedControl.connectedSet);
+				for (Entry<String,NodeSystem> entry : selectedControl.sendNodeMap.entrySet())
+					control.sendNodeMap.put(entry.getKey(),copyNodeSystem(control,entry.getValue()));
+				for (Entry<String,NodeSystem> entry : selectedControl.receiveNodeMap.entrySet())
+					control.receiveNodeMap.put(entry.getKey(),copyNodeSystem(control,entry.getValue()));
+				gui.control.panel.controls.remove(control);
+
+				gui.currentEditControl = control;
+				float[] gridMouse = gui.placement.convertToGridSpace(gui.mouseX, gui.mouseY);
+				gui.currentEditControl.posX = gridMouse[0];
+				gui.currentEditControl.posY = gridMouse[1];
+				gui.placement.resetPrevPos();
+				controlGrabbed = false;
+				selectedControl = null;
+			}
+		}
+	}
+	NodeSystem copyNodeSystem(Control control,NodeSystem other) {
+		NodeSystem sys = new NodeSystem(control);
+
+		NBTTagCompound otherNBT = other.writeToNBT(new NBTTagCompound());
+		{
+			// replace instrument index with new one
+			NBTTagCompound nodes = otherNBT.getCompoundTag("N");
+			for (int i = 0; i < nodes.getKeySet().size(); i ++) {
+				NBTTagCompound nodeTag = nodes.getCompoundTag("n"+i);
+				if (nodeTag.hasKey("controlIdx"))
+					nodeTag.setInteger("controlIdx",gui.control.panel.controls.indexOf(control));
+				nodes.setTag("n"+i,nodeTag);
+			}
+			otherNBT.setTag("N",nodes);
+		}
+		sys.readFromNBT(otherNBT);
+
+		return sys;
 	}
 
 	protected boolean canPlace(){

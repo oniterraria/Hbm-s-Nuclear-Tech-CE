@@ -75,7 +75,12 @@ public class SubElementItemConfig extends SubElement {
 
         if (last_control == null || !variant.name.equals(last_control.name)) {
             this.config_gui.enableButtons(false);
-            switch (variants.get(curr_variant)) { //TODO: clean
+            Control control = ControlRegistry.registry.get(variants.get(curr_variant));
+            if (control != null)
+                this.config_gui = control.getConfigSubElement(gui,(gui.isEditMode) ? existing_configs : control.getConfigs());
+
+            /* Leafia: what the hell is this 3
+            switch (variants.get(curr_variant)) {
                 case "display_7seg": {
                     this.config_gui = new SubElementDisplaySevenSeg(gui, (gui.isEditMode) ? existing_configs : ControlRegistry.registry.get("display_7seg").getConfigs());
                     break;
@@ -102,7 +107,7 @@ public class SubElementItemConfig extends SubElement {
                 }
                 default:
                     this.config_gui = new SubElementBaseConfig(gui); // blank, shows for variant selection
-            }
+            }*/
             if (!gui.isEditMode) {
                 gui.currentEditControl = variant;
             }

@@ -1,6 +1,7 @@
 package com.hbm.inventory.control_panel;
 
 import com.hbm.inventory.control_panel.controls.*;
+import com.hbm.util.Tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,30 +14,37 @@ public class ControlRegistry {
 	public static Map<String, Control> registry = new HashMap<>();
 	private static Map<Class<? extends Control>, String> classToName = new HashMap<>();
 
+	public static List<Control> addonControls = new ArrayList<>();
+
 	private ControlRegistry(){
 	}
 	
 	public static void init(){
-		registry.put("button_push", new ButtonPush("Push Button", null));
-		registry.put("button_emergency_push", new ButtonEmergencyPush("Emergency Push Button", null));
-		registry.put("button_encased_push", new ButtonEncasedPush("Encased Push Button", null));
+		registry.put("button_push", new ButtonPush("Push Button","button_push",null));
+		registry.put("button_emergency_push",new ButtonEmergencyPush("Emergency Push Button","button_emergency_push",null));
+		registry.put("button_encased_push",new ButtonEncasedPush("Encased Push Button","button_encased_push",null));
 
-		registry.put("switch_toggle", new SwitchToggle("Toggle Switch", null));
-		registry.put("switch_rotary_toggle", new SwitchRotaryToggle("Rotary Toggle Switch", null));
+		registry.put("switch_toggle",new SwitchToggle("Toggle Switch","switch_toggle",null));
+		registry.put("switch_rotary_toggle",new SwitchRotaryToggle("Rotary Toggle Switch","switch_rotary_toggle",null));
 
-		registry.put("slider_vertical", new SliderVertical("Vertical Slider", null));
+		registry.put("slider_vertical",new SliderVertical("Vertical Slider","slider_vertical",null));
 
-		registry.put("knob_control", new KnobControl("Control Knob", null));
+		registry.put("knob_control",new KnobControl("Control Knob","knob_control",null));
 
-		registry.put("display_7seg", new DisplaySevenSeg("7-seg Display", null));
-		registry.put("display_text", new DisplayText("Text Display", null));
+		registry.put("display_7seg",new DisplaySevenSeg("7-seg Display","display_7seg",null));
+		registry.put("display_text",new DisplayText("Text Display","display_text",null));
 
-		registry.put("dial_square", new DialSquare("Square Dial", null));
-		registry.put("dial_large", new DialLarge("Large Dial", null));
+		registry.put("dial_square",new DialSquare("Square Dial","dial_square",null));
+		registry.put("dial_large",new DialLarge("Large Dial","dial_large",null));
 
-		registry.put("indicator_lamp", new IndicatorLamp("Indicator Lamp", null));
+		registry.put("indicator_lamp",new IndicatorLamp("Indicator Lamp","indicator_lamp",null));
 
-		registry.put("label", new Label("Label", null));
+		registry.put("indicator_lamp_rgb",new IndicatorLampRGB("Indicator Lamp (RGB)","indicator_lamp_rgb",null));
+
+		registry.put("label",new Label("Label","label",null));
+
+		for (Control control : addonControls)
+			registry.put(control.registryName,control);
 
 		for(Entry<String, Control> e : registry.entrySet()){
 			classToName.put(e.getValue().getClass(), e.getKey());

@@ -1,11 +1,15 @@
 package com.hbm.inventory.control_panel;
 
 import com.hbm.Tags;
+import com.hbm.inventory.control_panel.controls.ControlType;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class SubElementItemChoice extends SubElement {
 	public static ResourceLocation bg_tex = new ResourceLocation(Tags.MODID + ":textures/gui/control_panel/gui_base.png");
@@ -27,6 +31,7 @@ public class SubElementItemChoice extends SubElement {
 		pageLeft = gui.addButton(new GuiButton(gui.currentButtonId(), cX-80, cY+92, 15, 20, "<"));
 		pageRight = gui.addButton(new GuiButton(gui.currentButtonId(), cX+65, cY+92, 15, 20, ">"));
 
+		/* Leafia: what the hell is this
 		buttons.add(gui.addButton(new GuiButton(1000, cX-80, (cY-90) + (0%7)*25, 160, 20, "Button")));
 		buttons.add(gui.addButton(new GuiButton(1001, cX-80, (cY-90) + (1%7)*25, 160, 20, "Switch")));
 		buttons.add(gui.addButton(new GuiButton(1002, cX-80, (cY-90) + (2%7)*25, 160, 20, "Display")));
@@ -35,6 +40,22 @@ public class SubElementItemChoice extends SubElement {
 		buttons.add(gui.addButton(new GuiButton(1005, cX-80, (cY-90) + (5%7)*25, 160, 20, "Dial")));
 		buttons.add(gui.addButton(new GuiButton(1006, cX-80, (cY-90) + (6%7)*25, 160, 20, "Label")));
 		buttons.add(gui.addButton(new GuiButton(1007, cX-80, (cY-90) + (7%7)*25, 160, 20, "Slider")));
+		 */
+
+		int id = 1000;
+		int pos = 0;
+		for (ControlType control : ControlType.ALL_VALUES) {
+			if (!ControlRegistry.getAllControlsOfType(control).isEmpty()) {
+				buttons.add(gui.addButton(
+						new GuiButton(id++,
+								cX-80,(cY-90)+((pos++)%7)*25,
+								160,20,
+								control.name
+						))
+				);
+			} else
+				id++; // shift id anyway because the control types are gathered from button IDs
+		}
 
 		numPages = (buttons.size()+6)/7;
 		super.initGui();
@@ -79,7 +100,15 @@ public class SubElementItemChoice extends SubElement {
 			currentPage = Math.min(numPages, currentPage + 1);
 			recalculateVisibleButtons();
 		} else {
-			switch (button.id) { //TODO: clean
+			ControlType type = ControlType.ALL_VALUES.get(button.id-1000);
+			if (type != null) {
+				gui.itemConfig.variants = ControlRegistry.getAllControlsOfType(type);
+				gui.currentEditControl = ControlRegistry.getNew(gui.itemConfig.variants.get(0),gui.control.panel);
+				gui.pushElement(gui.itemConfig);
+			}
+
+			/* Leafia: what the hell is this 2
+			switch (button.id) {
 				case 1000:
 					gui.currentEditControl = ControlRegistry.getNew("button_push", gui.control.panel);
 					gui.itemConfig.variants = ControlRegistry.getAllControlsOfType(gui.currentEditControl.getControlType());
@@ -118,7 +147,7 @@ public class SubElementItemChoice extends SubElement {
 					gui.currentEditControl = ControlRegistry.getNew("slider_vertical", gui.control.panel);
 					gui.pushElement(gui.linker);
 					break;
-			}
+			}*/
 		}
 	}
 	

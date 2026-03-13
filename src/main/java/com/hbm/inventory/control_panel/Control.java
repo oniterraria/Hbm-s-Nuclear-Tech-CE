@@ -1,6 +1,7 @@
 package com.hbm.inventory.control_panel;
 
 import com.hbm.inventory.control_panel.controls.ControlType;
+import com.hbm.inventory.control_panel.controls.configs.SubElementBaseConfig;
 import com.hbm.render.loader.IModelCustom;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,6 +17,7 @@ import java.util.Map.Entry;
 public abstract class Control {
 
 	public String name;
+	public final String registryName;
 	public ControlPanel panel;
 	//Set of block positions this control is connected to. When an event is sent, it gets sent to each one
 	public List<BlockPos> connectedSet = new ArrayList<>();
@@ -34,8 +36,9 @@ public abstract class Control {
 	public float posY;
 
 
-	public Control(String name, ControlPanel panel){
+	public Control(String name,String registryName,ControlPanel panel){
 		this.name = name;
+		this.registryName = registryName;
 		this.panel = panel;
 	}
 
@@ -43,6 +46,10 @@ public abstract class Control {
 
 	public abstract float[] getSize();
 
+	@SideOnly(Side.CLIENT)
+	public SubElementBaseConfig getConfigSubElement(GuiControlEdit gui,Map<String, DataValue> configs) {
+		return new SubElementBaseConfig(gui,configs);
+	}
 	public Map<String, DataValue> getConfigs() {
 		return configMap;
 	}
