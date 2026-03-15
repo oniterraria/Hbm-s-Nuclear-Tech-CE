@@ -1299,9 +1299,10 @@ public class ModEventHandler {
                 IHBMData props = HbmCapability.getData(player);
 
                 if(!props.hasReceivedBook()) {
-                    player.inventory.addItemStackToInventory(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()));
-                    player.inventoryContainer.detectAndSendChanges();
-                    props.setReceivedBook(true);
+                    if(player.inventory.addItemStackToInventory(new ItemStack(ModItems.book_guide, 1, ItemGuideBook.BookType.STARTER.ordinal()))) {
+                        player.inventoryContainer.detectAndSendChanges();
+                        props.setReceivedBook(true);
+                    }
                 }
             }
 
@@ -1470,6 +1471,13 @@ public class ModEventHandler {
             if (!Library.hasInventoryItem(player.inventory, ModItems.beta))
                 player.inventory.addItemStackToInventory(new ItemStack(ModItems.beta));
         }
+    }
+
+    @SubscribeEvent//mlbv: had to use fqn here because clash with net.minecraftforge.fml.common.gameevent.PlayerEvent
+    public void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event) {
+        IHBMData oldData = HbmCapability.getData(event.getOriginal());
+        IHBMData newData = HbmCapability.getData(event.getEntityPlayer());
+        newData.setReceivedBook(oldData.hasReceivedBook());
     }
 
     // TODO should probably use these.
