@@ -168,7 +168,7 @@ public abstract class BlockCraneBase extends BlockContainer implements IToolable
     }
 
     @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public @NotNull IBlockState getExtendedState(@NotNull IBlockState state, IBlockAccess world, @NotNull BlockPos pos) {
         TileEntityCraneBase te = (TileEntityCraneBase) world.getTileEntity(pos);
         if (te != null) {
             EnumFacing output = te.getOutputSide();
