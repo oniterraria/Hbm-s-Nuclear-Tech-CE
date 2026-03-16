@@ -62,6 +62,12 @@ and laser pistol/bobble sound registration
 - Hardened control panel save/load and editor flows so duplicated controls round-trip through serialized state, unresolved
 links are preserved, and missing controls are kept as placeholders instead of being discarded
 - Fixed latent bugs affecting Forge Fluid item tank I/O in NTM tanks
+- Fixed Cable Boxes and medium pylons using incorrect connection directions, restoring proper power-network attachment
+- Fixed Rotary Furnace JEI recipes not showing steam usage
+- Fixed guide book grant state not being preserved correctly across player lifecycle events
+- Fixed gas flares not polluting while burning vented fluids
+- Fixed Electric Press and Shredder sided automation/input validation edge cases, corrected crane output textures, and
+avoided Sedna weapon-mod priority overflow
 
 ### Changes
 - Diesel Generator now uses a refreshed animated model/GUI, rotates like other machines, emits smoke while running, supports a larger internal power buffer when fueled with Nitan, and has corrected block/item presentation
@@ -107,10 +113,15 @@ high-tier ammo
 (PR #1407 by Leafia)
 - Added control panel redstone input/output nodes, including `redstone_input` events and weak/strong redstone emission
 from panels
+- Added `Universal Fluid Tank V2` and `Hazardous Material Tank V2`, which support partial fill/drain and recipe
+conversions from the legacy tanks (PR #1370 by Hacker6329)
+- Ported `Heavy Duty Electricity Connector` with a 100m single-connection range (PR #1413 by purpl3xity)
 
 ### Performance
 - Added baked-quad caches for Combinator Funnel and Spotlight models
-- Reduced unnecessary Hazard System inventory syncs
+- Reduced unnecessary Hazard System inventory syncs and optimized NBT lookup
+- Migrated a lot of machines / blocks / items from TESR/TEISR to baked models, thereby significantly reducing draw calls
 
 ### Misc
 - Expanded the in-game manual with Redstone-over-Radio, crude oil, and remaining QMAW/ammo pages
+- Corrected some translations
