@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,14 +24,18 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.UUID;
 
 @AutoRegister
-public class TileEntityNukeTsar extends TileEntity implements IGUIProvider {
+public class TileEntityNukeTsar extends TileEntity implements ITickable, IGUIProvider {
 
 	public ItemStackHandler inventory;
 	public UUID placerID;
     private String customName;
 	
 	public TileEntityNukeTsar() {
-		inventory = new ItemStackHandler(9){
+		inventory = getNewInventory(6);
+	}
+
+	public ItemStackHandler getNewInventory(int slotCount) {
+		return new ItemStackHandler(slotCount) {
 			@Override
 			protected void onContentsChanged(int slot) {
 				markDirty();
@@ -38,7 +43,21 @@ public class TileEntityNukeTsar extends TileEntity implements IGUIProvider {
 			}
 		};
 	}
-	
+
+	protected void resizeInventory(int newSlotCount) {
+		ItemStackHandler newInventory = getNewInventory(newSlotCount);
+		for (int i = 0; i < Math.min(inventory.getSlots(), newSlotCount); i++) {
+			newInventory.setStackInSlot(i, inventory.getStackInSlot(i));
+		}
+		this.inventory = newInventory;
+		markDirty();
+	}
+
+	@Override
+	public void update() {
+		if(inventory.getSlots() > 6) resizeInventory(6);
+	}
+
 	public String getInventoryName() {
 		return this.hasCustomInventoryName() ? this.customName : "container.nukeTsar";
 	}
