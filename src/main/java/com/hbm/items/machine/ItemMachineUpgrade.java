@@ -22,7 +22,9 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Set;
 
@@ -69,14 +71,19 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 	}
 
 	@Override
-	public void addInformation(ItemStack stack, World worldIn, List<String> list, ITooltipFlag flagIn) {
+	public void addInformation(@NotNull ItemStack stack, World worldIn, @NotNull List<String> list, @NotNull ITooltipFlag flagIn) {
 		GuiScreen open = Minecraft.getMinecraft().currentScreen;
 
 		if (open instanceof GuiContainer guiContainer) {
 			Container container = guiContainer.inventorySlots;
-			if (!container.inventorySlots.isEmpty()) {
-				Slot first = container.getSlot(0);
 
+			IUpgradeInfoProvider provider = findProvider(container);
+			if (provider == null) {
+				provider = findProvider(guiContainer);
+			}
+
+			if (provider == null && !container.inventorySlots.isEmpty()) {
+				Slot first = container.getSlot(0);
 				IItemHandler handler = null;
 
 				if (first instanceof SlotItemHandler) {
@@ -87,12 +94,16 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 					}
 				}
 
-				if (handler instanceof IUpgradeInfoProvider provider) {
-					boolean advanced = flagIn.isAdvanced();
-					if (provider.canProvideInfo(this.type, this.tier, advanced)) {
-						provider.provideInfo(this.type, this.tier, list, advanced);
-						return;
-					}
+				if (handler instanceof IUpgradeInfoProvider) {
+					provider = (IUpgradeInfoProvider) handler;
+				}
+			}
+
+			if (provider != null) {
+				boolean advanced = flagIn.isAdvanced();
+				if (provider.canProvideInfo(this.type, this.tier, advanced)) {
+					provider.provideInfo(this.type, this.tier, list, advanced);
+					return;
 				}
 			}
 		}
@@ -156,6 +167,27 @@ public class ItemMachineUpgrade extends ItemBakedBase {
 			list.add("Allows for total isotopic separation of HEUF6");
 			list.add(TextFormatting.YELLOW + "also your centrifuge goes sicko mode");
 		}
+	}
+
+	// Th3_Sl1ze: Idk how, but IUIP simply refuses to be detected the regular way. Yes, whatever shit below is atrocious, but it works
+	private IUpgradeInfoProvider findProvider(Object obj) {
+		if (obj == null) return null;
+		if (obj instanceof IUpgradeInfoProvider) return (IUpgradeInfoProvider) obj;
+
+		Class<?> clazz = obj.getClass();
+		while (clazz != Object.class && clazz != null) {
+			for (Field f : clazz.getDeclaredFields()) {
+				try {
+					f.setAccessible(true);
+					Object val = f.get(obj);
+					if (val instanceof IUpgradeInfoProvider) {
+						return (IUpgradeInfoProvider) val;
+					}
+				} catch (Exception ignored) {}
+			}
+			clazz = clazz.getSuperclass();
+		}
+		return null;
 	}
 
 	public static final Set<Item> scrapItems = Sets.newHashSet(Item.getItemFromBlock(Blocks.GRASS),
