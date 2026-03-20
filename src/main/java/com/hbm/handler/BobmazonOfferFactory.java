@@ -3,6 +3,8 @@ package com.hbm.handler;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.PlantEnums;
 import com.hbm.blocks.generic.BlockConcreteColoredExt;
+import com.hbm.blocks.generic.BlockPlushie;
+import com.hbm.blocks.generic.BlockSnowglobe;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Offer;
 import com.hbm.inventory.gui.GUIScreenBobmazon.Requirement;
@@ -50,8 +52,8 @@ public class BobmazonOfferFactory {
 		standard.add(new Offer(new ItemStack(ModBlocks.plant_flower, 1, PlantEnums.EnumFlowerPlantType.MUSTARD_WILLOW_0.ordinal()), Requirement.NUCLEAR, 64, 8));
 		//deco
 		for(BlockConcreteColoredExt.EnumConcreteType conc : BlockConcreteColoredExt.EnumConcreteType.VALUES) standard.add(new Offer(new ItemStack(ModBlocks.concrete_colored_ext, 16, conc.ordinal()), Requirement.CHEMICS, 4));
-		//for(SnowglobeType globe : SnowglobeType.values()) standard.add(new Offer(new ItemStack(ModBlocks.snowglobe, 1, globe.ordinal()), Requirement.CHEMICS, 128));
-		//for(int i = 1; i < PlushieType.values().length; i++) standard.add(new Offer(new ItemStack(ModBlocks.plushie, 1, i), Requirement.OIL, 16, i < 3 ? 10 : 0));
+		for(BlockSnowglobe.SnowglobeType globe : BlockSnowglobe.SnowglobeType.values()) standard.add(new Offer(new ItemStack(ModBlocks.snowglobe, 1, globe.ordinal()), Requirement.CHEMICS, 128));
+		for(int i = 1; i < BlockPlushie.PlushieType.values().length; i++) standard.add(new Offer(new ItemStack(ModBlocks.plushie, 1, i), Requirement.OIL, 16, i < 3 ? 10 : 0));
 
 		special.add(new Offer(new ItemStack(Items.IRON_INGOT, 64), Requirement.STEEL, 1));
 		special.add(new Offer(new ItemStack(ModItems.ingot_steel, 64), Requirement.STEEL, 1));

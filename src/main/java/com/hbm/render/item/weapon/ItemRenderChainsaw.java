@@ -58,7 +58,7 @@ public class ItemRenderChainsaw extends TEISRBase {
                 break;
 
             case THIRD_PERSON_RIGHT_HAND, THIRD_PERSON_LEFT_HAND:
-                GlStateManager.scale(0.53, 0.53, 0.53);
+                GlStateManager.scale(0.56, 0.56, 0.56);
                 GlStateManager.rotate(-180, 0, 1, 0);
                 GlStateManager.translate(-1, -1.3, -1.1);
                 break;
