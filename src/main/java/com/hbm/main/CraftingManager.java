@@ -93,6 +93,7 @@ public class CraftingManager {
 		addSlabStair(ModBlocks.brick_concrete_broken_slab, ModBlocks.brick_concrete_broken_stairs, ModBlocks.brick_concrete_broken);
 		addSlabStair(ModBlocks.brick_compound_slab, ModBlocks.brick_compound_stairs, ModBlocks.brick_compound);
 		addSlabStair(ModBlocks.brick_asbestos_slab, ModBlocks.brick_asbestos_stairs, ModBlocks.brick_asbestos);
+		addSlabStair(ModBlocks.brick_light_slab, ModBlocks.brick_light_stairs, ModBlocks.brick_light);
 		addSlabStair(ModBlocks.brick_obsidian_slab, ModBlocks.brick_obsidian_stairs, ModBlocks.brick_obsidian);
 		addSlabStair(ModBlocks.cmb_brick_reinforced_slab, ModBlocks.cmb_brick_reinforced_stairs, ModBlocks.cmb_brick_reinforced);
 		addSlabStair(ModBlocks.concrete_slab, ModBlocks.concrete_stairs, ModBlocks.concrete);
@@ -107,6 +108,13 @@ public class CraftingManager {
 		addSlabStair(ModBlocks.tile_lab_slab, ModBlocks.tile_lab_stairs, ModBlocks.tile_lab);
 		addSlabStair(ModBlocks.tile_lab_cracked_slab, ModBlocks.tile_lab_cracked_stairs, ModBlocks.tile_lab_cracked);
 		addSlabStair(ModBlocks.tile_lab_broken_slab, ModBlocks.tile_lab_broken_stairs, ModBlocks.tile_lab_broken);
+		addSlabStair(ModBlocks.brick_fire_slab, ModBlocks.brick_fire_stairs, ModBlocks.brick_fire);
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone_tile_stairs, 8), "#  ", "## ", "###", '#', new ItemStack(ModBlocks.lightstone, 1, LightstoneType.TILE.ordinal()));
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 3, LightstoneType.TILE.ordinal()),
+				ModBlocks.lightstone_tile_stairs, ModBlocks.lightstone_tile_stairs, ModBlocks.lightstone_tile_stairs, ModBlocks.lightstone_tile_stairs);
+		addRecipeAuto(new ItemStack(ModBlocks.lightstone_bricks_stairs, 8), "#  ", "## ", "###", '#', new ItemStack(ModBlocks.lightstone, 1, LightstoneType.BRICKS.ordinal()));
+		addShapelessAuto(new ItemStack(ModBlocks.lightstone, 3, LightstoneType.BRICKS.ordinal()),
+				ModBlocks.lightstone_bricks_stairs, ModBlocks.lightstone_bricks_stairs, ModBlocks.lightstone_bricks_stairs, ModBlocks.lightstone_bricks_stairs);
 
 		addSlabStair(ModBlocks.pink_slab, ModBlocks.pink_stairs, ModBlocks.pink_planks);
 
