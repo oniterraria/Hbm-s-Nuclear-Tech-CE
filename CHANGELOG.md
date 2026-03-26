@@ -14,18 +14,27 @@
 >   - Changes, New Features correspond to a minor bump.  
 >   - Fixes/Performance/Misc correspond to a minor or patch bump.
 > - Previous public release: 2.2.0.0
-> - Next release: at least 2.2.0.1
+> - Next release: at least 2.2.1.0
 
 ### SUBSTANTIAL CHANGES
 
 ### Breaking Changes
 
 ### Fixes
+- Fixed impact overworld provider rebinding clashing with OTG / other mods' custom provider
+- Fixed RBMK Display facing/render
+- Fixed RBMK columns' extreme placing / removing lag due to improper quads caching
+- Mitigated duct and cable placing / removing lag due to eager net destruction and reconstruction
 
 ### Changes
+- JEI recipe lookup for `fluid_icon` items is now forwarded to their Forge fluid mirror
 
 ### New Features
 
 ### Performance
+- Moved Tau/Vortex particles, chemical projectiles, black-hole effects, and RBMK console/display overlays onto
+`NTMImmediate` / fast-buffer rendering paths, reducing legacy Tessellator overhead and aligning them with the newer
+client rendering utilities
+- Reworked rebar concrete-fill rendering into a dedicated client renderer. The render-limit client config is removed.
 
 ### Misc
