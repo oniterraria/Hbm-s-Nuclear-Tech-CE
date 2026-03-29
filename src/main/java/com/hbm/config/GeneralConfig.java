@@ -19,6 +19,7 @@ public class GeneralConfig {
 	public static int packetThreadingCoreCount = 1;
 	public static int packetThreadingMaxCount = 2;
 	public static boolean packetThreadingErrorBypass = false;
+	public static boolean enableZeroCopyCompatibilityMode = false;
     public static boolean enableThreadedNodeSpaceUpdate = true;
 	public static boolean enableDebugMode = false;
 	public static boolean enableDebugWorldGen = false;
@@ -127,6 +128,7 @@ public class GeneralConfig {
 		packetThreadingMaxCount = config.get(CommonConfig.CATEGORY_GENERAL, "0.03_packetThreadingMaxCount", 2, "Maximum number of threads to create for packet threading. Must be greater than or equal to 0.02_packetThreadingCoreCount.").getInt(2);
 		packetThreadingErrorBypass = config.get(CommonConfig.CATEGORY_GENERAL, "0.04_packetThreadingErrorBypass", false, "Forces the bypassing of most packet threading errors, only enable this if directed to or if you know what you're doing.").getBoolean(false);
 		enableServerRecipeSync = config.get(CommonConfig.CATEGORY_GENERAL, "0.05_enableServerRecipeSync", true, "Syncs any recipes customised via JSON to clients connecting to the server.").getBoolean(true);
+		enableZeroCopyCompatibilityMode = config.get(CommonConfig.CATEGORY_GENERAL, "0.06_enableZeroCopyCompatibilityMode", false, "Routes non-NTM packets back through Forge's default networking path so mods with broken ByteBuf reference counting do not touch NTM's zero-copy hook.").getBoolean(false);
         enableThreadedNodeSpaceUpdate = config.get(CommonConfig.CATEGORY_GENERAL, "0.07_enableThreadedNodeSpaceUpdate", true, "Enables threaded updating of the nodespace. This can improve performance, but may cause issues with certain mods.").getBoolean(true);
 		enableBlockReplcement = config.get(CommonConfig.CATEGORY_GENERAL, "0.99_CE_01_enableBlockAutoReplacing", false, """
                 Enables automatic block replacement for missing blocks to avoid giant holes in the ground when they got removed. This may severely impact chunkloading performance,
