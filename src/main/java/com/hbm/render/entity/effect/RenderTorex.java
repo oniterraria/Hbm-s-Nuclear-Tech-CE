@@ -228,7 +228,7 @@ public class RenderTorex extends Render<EntityNukeTorex> {
 		float posY = getCloudletRenderPos(cloudlet.prevPosY, cloudlet.posY, partialTicks, cloud.posY);
 		float posZ = getCloudletRenderPos(cloudlet.prevPosZ, cloudlet.posZ, partialTicks, cloud.posZ);
 
-		InstancedBillboardBatch.writeInstance(buf, posX, posY, posZ, scale,
+		InstancedBillboardBatch.writeInstance(buf, posX, posY, posZ, scale * 2F,
 				CLOUDLET_MIN_U, CLOUDLET_MIN_V, CLOUDLET_SIZE_U, CLOUDLET_SIZE_V,
 				r, g, b, alpha, br, br);
 	}
