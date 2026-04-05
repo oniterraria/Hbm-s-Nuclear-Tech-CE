@@ -59,6 +59,7 @@
 ### New Features
 - Updated RBMK debris block textures and added new RBMK decorative panel/slab blocks (PR #1450 by Leafia)
 - Added network compatibility mode config option
+- Ported Creative klystron and Plasma Forge
 
 ### Performance
 - Moved Tau/Vortex particles, chemical projectiles, black-hole effects, and RBMK console/display overlays onto

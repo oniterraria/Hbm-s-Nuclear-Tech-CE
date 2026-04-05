@@ -1256,6 +1256,7 @@ public class ModBlocks {
     public static final Block fusion_boiler = new MachineFusionBoiler("fusion_boiler").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block fusion_mhdt = new MachineFusionMHDT("fusion_mhdt").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block fusion_coupler = new MachineFusionCoupler("fusion_coupler").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
+    public static final Block fusion_plasma_forge = new MachineFusionPlasmaForge("fusion_plasma_forge").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
 
     public static final Block machine_icf_press = new MachineICFPress().setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block icf = new MachineICF("icf").setHardness(5.0F).setResistance(60.0F).setCreativeTab(MainRegistry.machineTab);
