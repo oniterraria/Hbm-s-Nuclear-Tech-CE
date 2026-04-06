@@ -272,7 +272,7 @@ public class TileEntityFusionKlystron extends TileEntityMachineBase implements I
 
     @Override public long getPower() { return power; }
     @Override public void setPower(long power) { this.power = power; }
-    @Override public long getMaxPower() { return maxPower; }
+    @Override public long getMaxPower() { return Math.max(maxPower, 1_000_000L); }
 
     @Override public FluidTankNTM[] getAllTanks() { return new FluidTankNTM[] {compair}; }
     @Override public FluidTankNTM[] getReceivingTanks() { return new FluidTankNTM[] {compair}; }
