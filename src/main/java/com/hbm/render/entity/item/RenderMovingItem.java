@@ -51,6 +51,9 @@ public class RenderMovingItem extends Render<EntityMovingItem> {
 		Minecraft.getMinecraft().getRenderItem().renderItem(stack, model);
 
 		GlStateManager.popMatrix();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.disableBlend();
+		RenderHelper.disableStandardItemLighting();
 	}
 
 	@Override
