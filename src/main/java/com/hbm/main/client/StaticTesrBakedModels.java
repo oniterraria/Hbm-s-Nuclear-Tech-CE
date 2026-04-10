@@ -411,11 +411,6 @@ public final class StaticTesrBakedModels {
         return SPECS_BY_BLOCK.containsKey(block);
     }
 
-    public static int @Nullable [] getDetectedRenderExtents(IBlockState state) {
-        Spec spec = SPECS_BY_BLOCK.get(state.getBlock());
-        return spec != null ? spec.getAutoRenderExtents(state) : null;
-    }
-
     private static Spec facingSpec(Block block, String modelPath, String texturePath, float[] yawsByMeta) {
         ModelResourceLocation north = new ModelResourceLocation(block.getRegistryName(), "facing=north");
         ModelResourceLocation south = new ModelResourceLocation(block.getRegistryName(), "facing=south");
@@ -540,18 +535,15 @@ public final class StaticTesrBakedModels {
 
     public static int @Nullable [] getManagedRenderExtents(IBlockState state) {
         Block block = state.getBlock();
-        if (!isManagedBlock(block)) {
-            return null;
-        }
+        Spec spec = SPECS_BY_BLOCK.get(block);
+        if (spec == null) return null;
 
         if (block instanceof IRenderExtentsOverride override) {
             int[] manual = override.getRenderExtentsOverride(state);
-            if (manual != null) {
-                return manual;
-            }
+            if (manual != null) return manual;
         }
 
-        return getDetectedRenderExtents(state);
+        return spec.getAutoRenderExtents(state);
     }
 
     private static int[][] unionAutoRenderExtents(int[][] primary, int[][] secondary) {

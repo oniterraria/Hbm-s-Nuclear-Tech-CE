@@ -1,6 +1,7 @@
 package com.hbm.mixin.mod.neonium;
 
 import com.hbm.lib.Library;
+import com.hbm.render.chunk.ChunkSpanningTesrHelper;
 import com.hbm.render.chunk.IExtraExtentsHolder;
 import com.hbm.render.chunk.IVisibleSectionSetHolder;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
@@ -26,11 +27,14 @@ public abstract class MixinChunkRenderManager<T extends ChunkGraphicsState> impl
 
     @Unique
     private final LongOpenHashSet hbm$visibleSections = new LongOpenHashSet();
+    @Unique
+    private boolean hbm$trackVisibleSections;
 
     @Dynamic
     @Inject(method = "reset", at = @At("HEAD"), require = 1)
     private void hbm$resetVisibleSections(CallbackInfo ci) {
         hbm$visibleSections.clear();
+        hbm$trackVisibleSections = !ChunkSpanningTesrHelper.isEmpty();
     }
 
     @Dynamic
@@ -56,10 +60,12 @@ public abstract class MixinChunkRenderManager<T extends ChunkGraphicsState> impl
     @Dynamic
     @Redirect(method = "addChunk", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/render/chunk/ChunkRenderContainer;isEmpty()Z"), remap = false, require = 1)
     private boolean hbm$trackVisibleSection(ChunkRenderContainer<T> render) {
-        hbm$visibleSections.add(Library.sectionToLong(
-                render.getOriginX() >> 4,
-                render.getOriginY() >> 4,
-                render.getOriginZ() >> 4));
+        if (hbm$trackVisibleSections) {
+            hbm$visibleSections.add(Library.sectionToLong(
+                    render.getOriginX() >> 4,
+                    render.getOriginY() >> 4,
+                    render.getOriginZ() >> 4));
+        }
         return render.isEmpty();
     }
 

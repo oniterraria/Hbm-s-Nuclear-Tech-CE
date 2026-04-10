@@ -8,7 +8,8 @@
     "MixinCompiledChunk",
     "MixinSetVisibility",
     "MixinRenderChunk",
-    "MixinRenderGlobal"
+    "MixinRenderGlobal",
+    "MixinTileEntity"
   ],
   "mixins": [
     "MixinFMLProxyPacket",
