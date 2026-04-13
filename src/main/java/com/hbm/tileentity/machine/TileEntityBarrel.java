@@ -30,6 +30,7 @@ import li.cil.oc.api.machine.Callback;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -278,9 +279,13 @@ public class TileEntityBarrel extends TileEntityMachineBase implements ITickable
 
     @Override
     public void deserialize(ByteBuf buf) {
+        FluidType prevType = tankNew.getTankType();
         super.deserialize(buf);
         mode = buf.readShort();
         tankNew.deserialize(buf);
+        if (prevType != tankNew.getTankType()) {
+            Minecraft.getMinecraft().addScheduledTask(() -> world.markBlockRangeForRenderUpdate(pos, pos));
+        }
     }
 
     protected DirPos[] getConPos() {
