@@ -205,6 +205,11 @@ public class SubElementNodeEditor extends SubElement {
 	
 	@Override
 	protected void drawScreen(){
+		int cX = gui.width/2;
+		int cY = gui.height/2;
+		String hint = "Shift+A to add node";
+		gui.getFontRenderer().drawString(hint, cX - gui.getFontRenderer().getStringWidth(hint) / 2F + 45, cY-108, 0xFF777777, false);
+
 		float dWheel = Mouse.getDWheel();
 		float dScale = dWheel*gridScale*0.00075F;
 		
@@ -227,8 +232,6 @@ public class SubElementNodeEditor extends SubElement {
 		}
 		GlStateManager.disableLighting();
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		int cX = gui.width/2;
-		int cY = gui.height/2;
 		int minX = (cX-72)*gui.res.getScaleFactor();
 		int minY = (cY-114)*gui.res.getScaleFactor();
 		int maxX = (cX+120)*gui.res.getScaleFactor();
