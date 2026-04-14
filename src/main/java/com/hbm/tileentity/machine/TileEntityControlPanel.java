@@ -539,11 +539,8 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 		if (Objects.requireNonNull(value.getType()) == DataValue.DataType.NUMBER) {
 			return new Object[]{value.getNumber()};
 		}
-		if (Objects.requireNonNull(value.getType()) == DataType.COMPOSITE) {
-			Map<String,String> map = new HashMap<>();
-			for (String s : value.values())
-				map.put(s,value.getValueOf(s));
-			return new Object[]{map};
+		if (value.getType() == DataType.COMPOSITE) {
+			return new Object[]{((DataValueComposite) value).snapshot()};
 		}
 		return new Object[]{value.toString()};
 	}
@@ -561,15 +558,8 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 			panel.globalVars.put(name, new DataValueFloat((float) args.checkDouble(1)));
 		else if (args.isInteger(1))
 			panel.globalVars.put(name, new DataValueFloat((float) args.checkInteger(1)));
-		else if (args.isTable(1)) {
-			DataValueComposite value = new DataValueComposite();
-			Map mop = args.checkTable(1);
-			for (Object o : mop.keySet()) {
-				if (mop.containsKey(o))
-					value.setValueOf(o.toString(),mop.get(o).toString());
-			}
-			panel.globalVars.put(name,value);
-		}
+		else if (args.isTable(1))
+			panel.globalVars.put(name, DataValueComposite.fromLuaTable(args.checkTable(1)));
 		else
 			return new Object[]{"ERROR: unsupported value type"};
 
@@ -591,11 +581,8 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 		if (Objects.requireNonNull(value.getType()) == DataValue.DataType.NUMBER) {
 			return new Object[]{value.getNumber()};
 		}
-		if (Objects.requireNonNull(value.getType()) == DataType.COMPOSITE) {
-			Map<String,String> map = new HashMap<>();
-			for (String s : value.values())
-				map.put(s,value.getValueOf(s));
-			return new Object[]{map};
+		if (value.getType() == DataType.COMPOSITE) {
+			return new Object[]{((DataValueComposite) value).snapshot()};
 		}
 		return new Object[]{value.toString()};
 	}
@@ -632,15 +619,9 @@ public class TileEntityControlPanel extends TileEntity implements ITickable, ICo
 			panel.controls.get(index).vars.put(name, new DataValueFloat((float) args.checkDouble(2)));
 		else if (args.isInteger(2))
 			panel.controls.get(index).vars.put(name, new DataValueFloat(args.checkInteger(2)));
-		else if (args.isTable(2)) {
-			DataValueComposite value = new DataValueComposite();
-			Map mop = args.checkTable(2);
-			for (Object o : mop.keySet()) {
-				if (mop.containsKey(o))
-					value.setValueOf(o.toString(),mop.get(o).toString());
-			}
-			panel.controls.get(index).vars.put(name,value);
-		} else
+		else if (args.isTable(2))
+			panel.controls.get(index).vars.put(name, DataValueComposite.fromLuaTable(args.checkTable(2)));
+		else
 			return new Object[]{"ERROR: unsupported value type"};
 
 		return new Object[]{};

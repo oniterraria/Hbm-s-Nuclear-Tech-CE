@@ -9,7 +9,8 @@
     "MixinSetVisibility",
     "MixinRenderChunk",
     "MixinRenderGlobal",
-    "MixinTileEntity"
+    "MixinTileEntity",
+    "MixinRenderPlayerManly"
   ],
   "mixins": [
     "MixinFMLProxyPacket",

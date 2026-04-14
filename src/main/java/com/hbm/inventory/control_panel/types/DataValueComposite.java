@@ -4,11 +4,11 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-// experimental
 public class DataValueComposite extends DataValue {
 	Map<String,String> dataMap = new Object2ObjectOpenHashMap<>();
 	@Override
@@ -45,8 +45,7 @@ public class DataValueComposite extends DataValue {
 	}
 	@Override
 	public <E extends Enum<E>> E getEnum(Class<E> clazz) {
-		E[] enms = clazz.getEnumConstants();
-		return enms[0];
+		throw new UnsupportedOperationException("DataValueComposite has no enum representation");
 	}
 	@Override
 	public DataValue copy() {
@@ -57,6 +56,7 @@ public class DataValueComposite extends DataValue {
 	@Override
 	public NBTBase writeToNBT() {
 		NBTTagCompound compound = new NBTTagCompound();
+		compound.setString(TYPE_TAG, TYPE_COMPOSITE);
 		for (Entry<String,String> entry : dataMap.entrySet())
 			compound.setString(entry.getKey(),entry.getValue());
 		return compound;
@@ -64,8 +64,22 @@ public class DataValueComposite extends DataValue {
 	@Override
 	public void readFromNBT(NBTBase nbt) {
 		if (nbt instanceof NBTTagCompound compound) {
-			for (String s : compound.getKeySet())
+			for (String s : compound.getKeySet()) {
+				if (TYPE_TAG.equals(s)) continue;
 				dataMap.put(s,compound.getString(s));
+			}
 		}
+	}
+
+    public Map<String,String> snapshot() {
+		return new HashMap<>(dataMap);
+	}
+
+    public static DataValueComposite fromLuaTable(Map<?,?> table) {
+		DataValueComposite value = new DataValueComposite();
+		for (Entry<?,?> e : table.entrySet()) {
+			value.setValueOf(e.getKey().toString(), e.getValue().toString());
+		}
+		return value;
 	}
 }

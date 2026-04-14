@@ -199,5 +199,6 @@ public class TileEntityRBMKKeyPad extends TileEntityLoadedBase implements ITicka
 			key.rtty = data.getString("rtty" + i);
 			key.command = data.getString("cmd" + i);
 		}
+		this.markDirty();
 	}
 }

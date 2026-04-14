@@ -1,24 +1,23 @@
 package com.hbm.blocks.machine.rbmk;
 
 import com.hbm.api.block.IToolable;
+import com.hbm.main.MainRegistry;
+import com.hbm.main.ResourceManager;
 import com.hbm.tileentity.machine.rbmk.TileEntityRBMKKeyPad;
+
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
-
-import com.hbm.main.MainRegistry;
-import com.hbm.main.ResourceManager;
-
-import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 
 public class RBMKKeyPad extends RBMKMiniPanelBase implements IToolable {
 
@@ -64,26 +63,26 @@ public class RBMKKeyPad extends RBMKMiniPanelBase implements IToolable {
 		return true;
 	}
 
-	@SideOnly(Side.CLIENT) // i will not..
+	@SideOnly(Side.CLIENT)
 	public void renderInventoryBlock(Block block, int meta, int modelId) {
-		GL11.glPushMatrix();
-		GL11.glTranslated(0, -0.5, 0);
-		GL11.glRotated(-90, 0, 1, 0);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, -0.5, 0);
+		GlStateManager.rotate(-90, 0, 1, 0);
 
 		for(int i = 0; i < 4; i++) {
 
-			GL11.glPushMatrix();
-			GL11.glTranslated(0.25, (i / 2) * -0.5 + 0.25, (i % 2) * -0.5 + 0.25);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0.25, (i / 2) * -0.5 + 0.25, (i % 2) * -0.5 + 0.25);
 
-			GL11.glColor3f(1F, 1F, 1F);
+			GlStateManager.color(1F, 1F, 1F);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(ResourceManager.rbmk_keypad_tex);
 			ResourceManager.rbmk_button.renderPart("Socket");
-			GL11.glColor3f(0.65F, 0F, 0F);
+			GlStateManager.color(0.65F, 0F, 0F);
 			ResourceManager.rbmk_button.renderPart("Button");
-			GL11.glPopMatrix();
+			GlStateManager.popMatrix();
 		}
 
-		GL11.glColor3f(1F, 1F, 1F);
-		GL11.glPopMatrix();
+		GlStateManager.color(1F, 1F, 1F);
+		GlStateManager.popMatrix();
 	}
 }

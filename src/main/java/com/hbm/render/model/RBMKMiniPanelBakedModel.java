@@ -1,6 +1,6 @@
 package com.hbm.render.model;
 
-import com.hbm.blocks.machine.rbmk.RBMKDisplay;
+import com.hbm.blocks.machine.rbmk.RBMKMiniPanelBase;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -42,8 +42,8 @@ public class RBMKMiniPanelBakedModel extends AbstractBakedModel {
         }
 
         EnumFacing facing = EnumFacing.NORTH;
-        if (state != null && state.getPropertyKeys().contains(RBMKDisplay.FACING)) {
-            facing = state.getValue(RBMKDisplay.FACING);
+        if (state != null && state.getPropertyKeys().contains(RBMKMiniPanelBase.FACING)) {
+            facing = state.getValue(RBMKMiniPanelBase.FACING);
         }
 
         int index = facing.getIndex();

@@ -2,7 +2,6 @@ package com.hbm.inventory.control_panel.nodes;
 
 import com.hbm.inventory.control_panel.NodeConnection;
 import com.hbm.inventory.control_panel.NodeSystem;
-import com.hbm.inventory.control_panel.modular.StockNodesRegister;
 import com.hbm.inventory.control_panel.types.DataValue;
 import com.hbm.inventory.control_panel.types.DataValue.DataType;
 import com.hbm.inventory.control_panel.types.DataValueComposite;
@@ -43,7 +42,7 @@ public class NodeCompositeWrite extends Node {
 	}
 	@Override
 	public float[] getColor() {
-		return StockNodesRegister.colorComposite;
+		return DataType.COMPOSITE.getColor();
 	}
 	@Override
 	public String getDisplayName() {

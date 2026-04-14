@@ -1,6 +1,5 @@
 package com.hbm.render.tileentity;
 
-import com.hbm.blocks.machine.rbmk.RBMKDisplay;
 import com.hbm.blocks.machine.rbmk.RBMKMiniPanelBase;
 import com.hbm.interfaces.AutoRegister;
 import com.hbm.render.util.NTMBufferBuilder;
@@ -10,7 +9,6 @@ import com.hbm.tileentity.machine.rbmk.TileEntityRBMKDisplay;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.EnumFacing;
-import org.lwjgl.opengl.GL11;
 @AutoRegister
 public class RenderRBMKDisplay extends TileEntitySpecialRenderer<TileEntityRBMKDisplay> {
 

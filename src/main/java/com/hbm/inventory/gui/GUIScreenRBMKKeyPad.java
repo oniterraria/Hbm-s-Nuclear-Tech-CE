@@ -4,7 +4,6 @@ import com.hbm.Tags;
 import com.hbm.util.I18nUtil;
 import net.minecraft.init.SoundEvents;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -14,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
@@ -92,7 +92,7 @@ public class GUIScreenRBMKKeyPad extends GuiScreen {
 
 	private void drawGuiContainerBackgroundLayer(float f, int mouseX, int mouseY) {
 		super.drawDefaultBackground();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
@@ -128,7 +128,6 @@ public class GUIScreenRBMKKeyPad extends GuiScreen {
 		}
 
 		if(guiLeft + 209 <= x && guiLeft + 209 + 18 > x && guiTop + 17 < y && guiTop + 17 + 18 >= y) {
-			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK,1));
 			NBTTagCompound data = new NBTTagCompound();
 			byte active = 0;
 			byte polling = 0;
@@ -139,12 +138,22 @@ public class GUIScreenRBMKKeyPad extends GuiScreen {
 			data.setByte("active", active);
 			data.setByte("polling", polling);
 
+			boolean valid = true;
 			for(int i = 0; i < 4; i++) {
-				try { data.setInteger("color" + i, Integer.parseInt(this.color[i].getText(), 16)); } catch(Exception ex) { }
+				try {
+					data.setInteger("color" + i, Integer.parseInt(this.color[i].getText(), 16));
+					this.color[i].setTextColor(0x00ff00);
+				} catch(NumberFormatException ex) {
+					this.color[i].setTextColor(0xff0000);
+					valid = false;
+				}
 				data.setString("label" + i, this.label[i].getText());
 				data.setString("rtty" + i, this.rtty[i].getText());
 				data.setString("cmd" + i, this.cmd[i].getText());
 			}
+			if(!valid) return;
+
+			mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK,1));
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, keypad.getPos().getX(), keypad.getPos().getY(), keypad.getPos().getZ()));
 			return;
 		}

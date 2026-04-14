@@ -4,7 +4,6 @@ import com.hbm.inventory.control_panel.ItemList;
 import com.hbm.inventory.control_panel.SubElementNodeEditor;
 import com.hbm.inventory.control_panel.modular.INodeMenuCreator;
 import com.hbm.inventory.control_panel.nodes.Node;
-import com.hbm.inventory.control_panel.nodes.NodeBoolean;
 import com.hbm.inventory.control_panel.nodes.NodeCompositeRead;
 import com.hbm.inventory.control_panel.nodes.NodeCompositeWrite;
 

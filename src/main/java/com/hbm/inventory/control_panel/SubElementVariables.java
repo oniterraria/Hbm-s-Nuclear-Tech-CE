@@ -199,12 +199,12 @@ public class SubElementVariables extends SubElement {
     protected void drawCreateVar() {
         int cY = gui.height/2;
 
-        String text = "";
-        switch (newVarData.getType()) {
-            case NUMBER : text = "N : "; break;
-            case STRING : text = "S : "; break;
-            case COMPOSITE: text = "P: "; break;
-        }
+        String text = switch (newVarData.getType()) {
+            case NUMBER -> "N : ";
+            case STRING -> "S : ";
+            case COMPOSITE -> "P : ";
+            default -> "";
+        };
         gui.getFontRenderer().drawString(text, gui.getGuiLeft()+60, (cY-74), 0xFFFFFFFF, false);
         txt_newVarName.drawTextBox();
         gui.getFontRenderer().drawString(" = ", gui.getGuiLeft()+138, (cY-74), 0xFFFFFFFF, false);
@@ -258,23 +258,19 @@ public class SubElementVariables extends SubElement {
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        if (button == btn_newNumber) {
-            newVarData = new DataValueFloat(0);
-            txt_newVarData.setText(newVarData.toString());
-            shouldHideVarConfigs = false;
-            updateVarConfigVisibility();
-            isCreatingNewVar = true;
-        }
-        else if (button == btn_newString) {
-            newVarData = new DataValueString("");
-            txt_newVarData.setText(newVarData.toString());
-            shouldHideVarConfigs = false;
-            updateVarConfigVisibility();
-            isCreatingNewVar = true;
-        }
-        else if (button == btn_newComposite) {
-            newVarData = new DataValueComposite();
-            shouldHideVarConfigs = true;
+        if (button == btn_newNumber || button == btn_newString || button == btn_newComposite) {
+            if (button == btn_newNumber) {
+                newVarData = new DataValueFloat(0);
+                txt_newVarData.setText(newVarData.toString());
+                shouldHideVarConfigs = false;
+            } else if (button == btn_newString) {
+                newVarData = new DataValueString("");
+                txt_newVarData.setText(newVarData.toString());
+                shouldHideVarConfigs = false;
+            } else {
+                newVarData = new DataValueComposite();
+                shouldHideVarConfigs = true;
+            }
             updateVarConfigVisibility();
             isCreatingNewVar = true;
         }
