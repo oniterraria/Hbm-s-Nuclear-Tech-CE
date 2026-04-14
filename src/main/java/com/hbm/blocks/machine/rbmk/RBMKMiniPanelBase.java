@@ -1,5 +1,6 @@
 package com.hbm.blocks.machine.rbmk;
 
+import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.items.IDynamicModels;
 import com.hbm.render.model.RBMKMiniPanelBakedModel;
@@ -14,8 +15,10 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -30,8 +33,11 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class RBMKMiniPanelBase extends BlockContainer implements IDynamicModels {
+import java.util.List;
+
+public class RBMKMiniPanelBase extends BlockContainer implements IDynamicModels, ITooltipProvider {
 	@SideOnly(Side.CLIENT)
 	private TextureAtlasSprite sprite;
 
@@ -153,5 +159,10 @@ public class RBMKMiniPanelBase extends BlockContainer implements IDynamicModels 
 
 		event.getModelRegistry().putObject(worldLoc, worldModel);
 		event.getModelRegistry().putObject(invLoc, itemModel);
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		this.addStandardInfo(tooltip);
 	}
 }

@@ -7,18 +7,11 @@ import com.hbm.entity.logic.EntityNukeExplosionMK3;
 import com.hbm.entity.projectile.EntityBulletBaseMK4;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.explosion.vanillant.ExplosionVNT;
-import com.hbm.explosion.vanillant.standard.BlockAllocatorStandard;
-import com.hbm.explosion.vanillant.standard.BlockMutatorFire;
-import com.hbm.explosion.vanillant.standard.BlockProcessorStandard;
-import com.hbm.explosion.vanillant.standard.EntityProcessorCrossSmooth;
-import com.hbm.explosion.vanillant.standard.ExplosionEffectTiny;
-import com.hbm.explosion.vanillant.standard.ExplosionEffectWeapon;
-import com.hbm.explosion.vanillant.standard.PlayerProcessorStandard;
+import com.hbm.explosion.vanillant.standard.*;
 import com.hbm.handler.radiation.ChunkRadiationManager;
 import com.hbm.handler.threading.PacketThreading;
 import com.hbm.items.ItemEnumMulti;
 import com.hbm.items.weapon.grenade.ItemGrenadeShell.EnumGrenadeShell;
-import static com.hbm.items.weapon.grenade.ItemGrenadeShell.EnumGrenadeShell.*;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.factory.Lego;
 import com.hbm.lib.HBMSoundHandler;
@@ -45,6 +38,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+
+import static com.hbm.items.weapon.grenade.ItemGrenadeShell.EnumGrenadeShell.*;
 
 public class ItemGrenadeFilling extends ItemEnumMulti<ItemGrenadeFilling.EnumGrenadeFilling> {
 
@@ -222,13 +217,13 @@ public class ItemGrenadeFilling extends ItemEnumMulti<ItemGrenadeFilling.EnumGre
     };
 
     public static final Consumer<EntityGrenadeUniversal> EXPLODE_SCHRAB = grenade -> {
-        EntityNukeExplosionMK3 ex = EntityNukeExplosionMK3.statFacFleija(grenade.world, grenade.posX, grenade.posY, grenade.posZ, 50);
+        EntityNukeExplosionMK3 ex = EntityNukeExplosionMK3.statFacFleija(grenade.world, grenade.posX, grenade.posY, grenade.posZ, 20);
         if (!ex.isDead) {
             grenade.world.playSound(null, grenade.posX, grenade.posY, grenade.posZ,
                     SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 100.0F,
                     grenade.world.rand.nextFloat() * 0.1F + 0.9F);
             grenade.world.spawnEntity(ex);
-            EntityCloudFleija cloud = new EntityCloudFleija(grenade.world, 50);
+            EntityCloudFleija cloud = new EntityCloudFleija(grenade.world, 20);
             cloud.setPosition(grenade.posX, grenade.posY, grenade.posZ);
             grenade.world.spawnEntity(cloud);
         }
