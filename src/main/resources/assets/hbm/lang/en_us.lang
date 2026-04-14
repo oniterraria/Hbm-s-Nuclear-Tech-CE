@@ -7786,6 +7786,7 @@ tile.rbmk_loader.desc=Allows RBMKs to have both water and steam connections at t
 tile.rbmk_loader.name=RBMK Steam Connector
 tile.rbmk_moderator.desc=§eIt converts all fast flux passing through into slow flux
 tile.rbmk_moderator.name=RBMK Graphite Moderator
+tile.rbmk_numitron.name=Redstone-over-Radio Numeric Display
 tile.rbmk_outgasser.desc=§eAbsorbs incoming flux and does nuclear science with it.
 tile.rbmk_outgasser.name=RBMK Irradiation Channel
 tile.rbmk_reflector.desc=§eIt reflects flux back in the direction it came from.
