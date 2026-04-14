@@ -116,6 +116,9 @@ public class NodeSystem {
 			NBTTagCompound nodeTag = nodes.getCompoundTag("n"+i);
 			Node node = Node.nodeFromNBT(nodeTag, this);
 
+			if (node == null)
+				node = new UnknownNode(0,0,nodeTag);
+
 			if (node instanceof NodeOutput) {
 				outputNodes.add((NodeOutput) node);
 			}

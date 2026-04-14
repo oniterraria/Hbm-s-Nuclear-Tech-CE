@@ -210,6 +210,9 @@ public class SubElementNodeEditor extends SubElement {
 		String hint = "Shift+A to add node";
 		gui.getFontRenderer().drawString(hint, cX - gui.getFontRenderer().getStringWidth(hint) / 2F + 45, cY-108, 0xFF777777, false);
 
+		boolean unicode = gui.getFontRenderer().getUnicodeFlag();
+		gui.getFontRenderer().setUnicodeFlag(false);
+
 		float dWheel = Mouse.getDWheel();
 		float dScale = dWheel*gridScale*0.00075F;
 		
@@ -275,6 +278,7 @@ public class SubElementNodeEditor extends SubElement {
 			addMenu.render(gui.mouseX, gui.mouseY);
 		}
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		gui.getFontRenderer().setUnicodeFlag(unicode);
 	}
 	
 	@Override

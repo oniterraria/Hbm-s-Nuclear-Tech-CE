@@ -81,6 +81,18 @@ public class NodeConnection extends NodeElement implements ITypableNode {
 		builder = null;
 		isTyping = false;
 	}
+	public void buildFromNBT(NBTTagCompound tag){
+		isInput = tag.getBoolean("in");
+		type = DataType.VALUES[tag.getInteger("T") % DataType.VALUES.length];
+		defaultValue = DataValue.newFromNBT(tag.getTag("D"));
+		if(defaultValue == null){
+			type = DataType.NUMBER;
+			defaultValue = new DataValueFloat(0);
+		}
+		drawsLine = tag.getBoolean("DL");
+		builder = null;
+		isTyping = false;
+	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setDefault(@Nonnull DataValue defaultVal){
