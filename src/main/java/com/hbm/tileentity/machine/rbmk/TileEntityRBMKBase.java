@@ -74,6 +74,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 	public static final int maxWater = 16000;
 	public int reasimSteam;
 	public static final int maxSteam = 16000;
+	public int craneIndicator;
 
 	public static boolean explodeOnBroken = true;
 
@@ -126,6 +127,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
     public void update() {
 
         if(!world.isRemote) {
+            if(this.craneIndicator > 0) this.craneIndicator--;
 			this.world.profiler.startSection("rbmkBase_heat_movement");
             moveHeat();
             if(RBMKDials.getReasimBoilers(world)) {
@@ -641,6 +643,7 @@ public abstract class TileEntityRBMKBase extends TileEntityLoadedBase implements
 		col.moderated = this.isModerated();
 		col.reasimWater = this.reasimWater;
 		col.reasimSteam = this.reasimSteam;
+		col.indicator = this.craneIndicator;
 		return col;
 	}
 

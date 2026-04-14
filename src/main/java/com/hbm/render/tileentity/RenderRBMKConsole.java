@@ -102,6 +102,12 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
                 }
             }
 
+            if(col.indicator > 0) {
+                r = 1.0F;
+                g = 1.0F;
+                b = 0.0F;
+            }
+
             drawColumn(buf, kx, ky, kz, r, g, b);
 
 

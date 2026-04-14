@@ -210,6 +210,10 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
         posLeft = MathHelper.clamp(posLeft, -spanR, spanL);
 
         if(!world.isRemote) {
+            TileEntityRBMKBase base = this.getBaseAtPos();
+            if(base != null) {
+                base.craneIndicator = 10;
+            }
 
             if(!inventory.getStackInSlot(0).isEmpty() && inventory.getStackInSlot(0).getItem() instanceof ItemRBMKRod) {
                 this.loadedHeat = ItemRBMKRod.getHullHeat(inventory.getStackInSlot(0));
@@ -287,7 +291,7 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
         }
     }
 
-    public IRBMKLoadable getColumnAtPos() {
+    public TileEntityRBMKBase getBaseAtPos() {
 
         ForgeDirection dir = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
         ForgeDirection left = dir.getRotation(ForgeDirection.DOWN);
@@ -302,13 +306,18 @@ public class TileEntityRBMKCraneConsole extends TileEntityMachineBase implements
 
             int[] pos = ((BlockDummyable)b).findCore(world, x, y, z);
             if(pos != null) {
-                TileEntityRBMKBase column = (TileEntityRBMKBase)world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
-                if(column instanceof IRBMKLoadable) {
-                    return (IRBMKLoadable) column;
-                }
+                return (TileEntityRBMKBase) world.getTileEntity(new BlockPos(pos[0], pos[1], pos[2]));
             }
         }
 
+        return null;
+    }
+
+    public IRBMKLoadable getColumnAtPos() {
+        TileEntityRBMKBase base = getBaseAtPos();
+        if(base instanceof IRBMKLoadable loadable) {
+            return loadable;
+        }
         return null;
     }
 
