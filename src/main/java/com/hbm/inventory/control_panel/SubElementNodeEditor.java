@@ -90,7 +90,7 @@ public class SubElementNodeEditor extends SubElement {
 		if (isTyping) return;
 		boolean ctrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 		if(currentSystem != null && currentSystem.currentTypingBox == null && ctrl) {
-			if(code == Keyboard.KEY_C) {
+			if(code == Keyboard.KEY_C || code == Keyboard.KEY_X) {
 				copySelectionToClipboard();
 				return;
 			}

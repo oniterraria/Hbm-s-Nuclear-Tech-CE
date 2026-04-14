@@ -279,6 +279,19 @@ public class NodeSystem {
 
 		List<Node> pastedNodes = new ArrayList<>(pastedSystem.nodes.size());
 		for(Node node : pastedSystem.nodes) {
+			for (NodeConnection input : node.inputs) {
+				if (input.connection == null) {
+					input.connectionIndex = -1;
+					input.drawsLine = false;
+				}
+			}
+			// i don't think output nodes maintain a connection but just to be safe
+			for (NodeConnection output : node.outputs) {
+				if (output.connection == null) {
+					output.connectionIndex = -1;
+					output.drawsLine = false;
+				}
+			}
 			node.setPosition(node.posX + dX, node.posY + dY);
 			addNode(node);
 			if(node instanceof NodeFunction) {
