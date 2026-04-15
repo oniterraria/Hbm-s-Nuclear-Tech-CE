@@ -20,7 +20,7 @@
 ### SUBSTANTIAL CHANGES
 
 ### Breaking Changes
-- Reworked grenade system: all individual grenade items (`grenade_generic`, `grenade_strong`, `grenade_frag`, `grenade_fire`, `grenade_shrapnel`, `grenade_cluster`, `grenade_flare`, `grenade_electric`, `grenade_poison`, `grenade_gas`, `grenade_cloud`, `grenade_pink_cloud`, `grenade_smart`, `grenade_mirv`, `grenade_breach`, `grenade_burst`, `grenade_pulse`, `grenade_plasma`, `grenade_tau`, `grenade_schrabidium`, `grenade_nuke`, `grenade_lemon`, `grenade_gascan`, `grenade_kyiv`, `grenade_mk2`, `grenade_aschrab`, `grenade_nuclear`, `grenade_zomg`, `grenade_solinium`, `grenade_black_hole`, and all `grenade_if_*` variants) have been removed and replaced with five modular items (`grenade_shell`, `grenade_filling`, `grenade_fuze`, `grenade_extra`, `grenade_universal`); existing grenades in the world and in inventories will be lost
+- Ported upstream rework of grenades; existing grenades in the world and in inventories will be lost
 - Removed `crucible_template`; the recipe is now picked directly on the crucible through its GUI, and `template_folder`/`journal_pip`/`journal_bj`/`journal_silver` no longer open a template folder GUI
 - Removed `turret_control`
 - Siege mobs now drop plain steel ingots instead of tier-specific siege coins
@@ -60,6 +60,8 @@
 - Added tagged-link system for Custom Control Panel: links survive the linked block being broken and can be identified by a tag string; hint "Shift+A to add node" shown in the node editor
 - Added composite data-value type for the Custom Control Panel
 - Siege mobs can now be configured with laser-weapon responses (block-breaking, explosion, incendiary)
+- Added more JEI recipe transfer handlers
+- Grouped some items in HEI (requires HEI 4.30.0+)
 
 ### Performance
 - Reduced redundant per-frame work in the chunk and tile-entity rendering path
