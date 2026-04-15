@@ -4,6 +4,8 @@ import com.hbm.main.client.StaticTesrBakedModels;
 import com.hbm.render.chunk.ChunkSpanningTesrHelper;
 import com.hbm.render.chunk.IExtraExtentsHolder;
 import com.hbm.render.chunk.IShadowRenderFrameStamp;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -21,7 +23,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
@@ -87,10 +88,10 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
         hbm$spanningTesrs.clear();
     }
 
-    @Redirect(method = "rebuildChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockRendererDispatcher;renderBlock(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/client/renderer/BufferBuilder;)Z"), require = 1)
+    @WrapOperation(method = "rebuildChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockRendererDispatcher;renderBlock(Lnet/minecraft/block/state/IBlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/IBlockAccess;Lnet/minecraft/client/renderer/BufferBuilder;)Z"), require = 1)
     private boolean hbm$trackOversizedBlock(BlockRendererDispatcher dispatcher, IBlockState state, BlockPos pos,
-                                            IBlockAccess world, BufferBuilder buffer) {
-        boolean result = dispatcher.renderBlock(state, pos, world, buffer);
+                                            IBlockAccess world, BufferBuilder buffer, Operation<Boolean> original) {
+        boolean result = original.call(dispatcher, state, pos, world, buffer);
         if (result) {
             int[] extents = StaticTesrBakedModels.getManagedRenderExtents(state);
             if (extents != null) {
@@ -109,9 +110,9 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
         return result;
     }
 
-    @Redirect(method = "rebuildChunk", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;isGlobalRenderer(Lnet/minecraft/tileentity/TileEntity;)Z"))
-    private boolean hbm$trackOversizedTesr(TileEntitySpecialRenderer<TileEntity> renderer, TileEntity te) {
-        if (renderer.isGlobalRenderer(te))
+    @WrapOperation(method = "rebuildChunk", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/tileentity/TileEntitySpecialRenderer;isGlobalRenderer(Lnet/minecraft/tileentity/TileEntity;)Z"))
+    private boolean hbm$trackOversizedTesr(TileEntitySpecialRenderer<TileEntity> renderer, TileEntity te, Operation<Boolean> original) {
+        if (original.call(renderer, te))
             return true;
         AxisAlignedBB bb = te.getRenderBoundingBox();
         if (bb == TileEntity.INFINITE_EXTENT_AABB)
@@ -137,14 +138,15 @@ public abstract class MixinRenderChunk implements IShadowRenderFrameStamp {
         return false;
     }
 
-    @Redirect(method = "rebuildChunk", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/chunk/CompiledChunk;setVisibility(Lnet/minecraft/client/renderer/chunk/SetVisibility;)V"))
-    private void hbm$publishOversizedExtents(CompiledChunk compiledChunk, SetVisibility visibility) {
+    @WrapOperation(method = "rebuildChunk", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/chunk/CompiledChunk;setVisibility(Lnet/minecraft/client/renderer/chunk/SetVisibility;)V"))
+    private void hbm$publishOversizedExtents(CompiledChunk compiledChunk, SetVisibility visibility, Operation<Void> original) {
         IExtraExtentsHolder holder = (IExtraExtentsHolder) compiledChunk;
         holder.hbm$setOversizedModelExtents(hbm$negX, hbm$posX, hbm$negY, hbm$posY, hbm$negZ, hbm$posZ);
         if (!hbm$spanningTesrs.isEmpty()) {
             holder.hbm$setChunkSpanningTesrs(hbm$spanningTesrs.toArray(new TileEntity[0]));
         }
-        compiledChunk.setVisibility(visibility);
+        //noinspection MixinExtrasOperationParameters
+        original.call(compiledChunk, visibility);
     }
 
     @Inject(method = "setCompiledChunk", at = @At("HEAD"), require = 1)
