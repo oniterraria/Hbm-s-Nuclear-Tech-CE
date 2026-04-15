@@ -57,6 +57,7 @@ public class RenderRBMKKeyPad extends TileEntitySpecialRenderer<TileEntityRBMKKe
 			}
 			ResourceManager.rbmk_button.renderPart("Button");
 			if(glow) RenderArcFurnace.fullbright(false);
+			GlStateManager.color(1F, 1F, 1F);
 
 			GlStateManager.popMatrix();
 
