@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -351,9 +352,9 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
         GlStateManager.pushMatrix();
         // Bright pass for glow layer
-        float lastX = net.minecraft.client.renderer.OpenGlHelper.lastBrightnessX;
-        float lastY = net.minecraft.client.renderer.OpenGlHelper.lastBrightnessY;
-        net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, 240F, 240F);
+        float lastX = OpenGlHelper.lastBrightnessX;
+        float lastY = OpenGlHelper.lastBrightnessY;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
         GlStateManager.disableLighting();
         ResourceManager.bobble.renderPart("Pellet");
 
@@ -369,7 +370,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.enableTexture2D();
 
         GlStateManager.enableLighting();
-        net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, lastX, lastY);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
         GlStateManager.popMatrix();
     }
 
@@ -478,9 +479,9 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
                 break;
             }
             case MELLOW: {
-                float lastX = net.minecraft.client.renderer.OpenGlHelper.lastBrightnessX;
-                float lastY = net.minecraft.client.renderer.OpenGlHelper.lastBrightnessY;
-                net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, 240F, 240F);
+                float lastX = OpenGlHelper.lastBrightnessX;
+                float lastY = OpenGlHelper.lastBrightnessY;
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
                 bindTexture(bobble_mellow_glow);
                 renderGuy(type);
                 GlStateManager.enableBlend();
@@ -492,16 +493,16 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
                 ResourceManager.bobble.renderPart("Glow");
                 GlStateManager.alphaFunc(GL11.GL_GREATER, 0.1F);
                 GlStateManager.disableBlend();
-                net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, lastX, lastY);
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
                 break;
             }
             case ABEL: {
-                float lastX = net.minecraft.client.renderer.OpenGlHelper.lastBrightnessX;
-                float lastY = net.minecraft.client.renderer.OpenGlHelper.lastBrightnessY;
-                net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, 240F, 240F);
+                float lastX = OpenGlHelper.lastBrightnessX;
+                float lastY = OpenGlHelper.lastBrightnessY;
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240F, 240F);
                 bindTexture(bobble_abel_glow);
                 renderGuy(type);
-                net.minecraft.client.renderer.OpenGlHelper.setLightmapTextureCoords(net.minecraft.client.renderer.OpenGlHelper.lightmapTexUnit, lastX, lastY);
+                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastX, lastY);
                 break;
             }
         }
@@ -513,6 +514,10 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
         GlStateManager.popMatrix();
     }
 
+    /*
+     * Creates a small diamond at 0/0, useful for figuring out where the translation is at
+     * to determine the rotation point
+     */
     public void renderOrigin() {
         GlStateManager.disableCull();
         GlStateManager.disableTexture2D();
@@ -594,7 +599,7 @@ public class RenderBobble extends TileEntitySpecialRenderer<TileEntityBobble> im
 
             public void renderCommon(ItemStack stack) {
                 GlStateManager.scale(0.5, 0.5, 0.5);
-                RenderBobble.instance.renderBobble(BobbleType.VALUES[stack.getItemDamage()]);
+                RenderBobble.instance.renderBobble(BobbleType.VALUES[Math.floorMod(stack.getItemDamage(), BobbleType.VALUES.length)]);
             }
 
             public void renderGround() {

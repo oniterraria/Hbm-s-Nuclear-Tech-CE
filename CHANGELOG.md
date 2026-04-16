@@ -38,6 +38,8 @@
 - Drill-equipped weapons no longer spam block-break sounds on unbreakable blocks
 - Custom Control Panel: fixed visual color leak and relog bug, keyboard-repeat not firing, nodes being deletable while typing in text fields, and panels not loading properly
 - Fixed skeleton particle rendering
+- Fixed a crash when reloading a world with nuke/fallout without restarting the client
+- Fixed BAT9000 not having persistent NBT for item drops
 
 ### Changes
 - Ported new fallout block textures
