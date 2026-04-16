@@ -35,6 +35,7 @@ import java.util.List;
 
 @AutoRegister
 public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIProvider, IControlReceiver {
+    public boolean isIndirectlyPowered;
     public boolean isWhitelist = false;
     public ModulePatternMatcher matcher;
     private int tickCounter = 0;
@@ -62,6 +63,12 @@ public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIP
     }
 
     @Override
+    public void onLoad() {
+        super.onLoad();
+        if(!world.isRemote) isIndirectlyPowered = world.isBlockPowered(pos);
+    }
+
+    @Override
     public String getDefaultName() {
         return "container.craneGrabber";
     }
@@ -72,7 +79,7 @@ public class TileEntityCraneGrabber extends TileEntityCraneBase implements IGUIP
         if(!world.isRemote) {
             tickCounter++;
 
-            if(tickCounter >= this.delay && !this.world.isBlockPowered(pos)) {
+            if(tickCounter >= this.delay && !isIndirectlyPowered) {
                 tickCounter = 0;
                 int amount = 1;
                 if(!inventory.getStackInSlot(9).isEmpty()){

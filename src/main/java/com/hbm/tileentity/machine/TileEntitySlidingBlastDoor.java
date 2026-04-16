@@ -95,6 +95,7 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
 
     @Override
     public void serialize(ByteBuf buf){
+        super.serialize(buf);
         buf.writeBoolean(shouldUseBB);
         buf.writeByte(state.ordinal());
         if(texture != -1)
@@ -103,6 +104,7 @@ public class TileEntitySlidingBlastDoor extends TileEntityLockableBase implement
 
     @Override
     public void deserialize(ByteBuf buf) {
+        super.deserialize(buf);
         shouldUseBB = buf.readBoolean();
 
         DoorState newState = DoorState.values()[buf.readByte()];

@@ -8,6 +8,7 @@ import com.hbm.blocks.ModBlocks;
 import com.hbm.lib.InventoryHelper;
 import com.hbm.tileentity.network.TileEntityCraneBase;
 import com.hbm.tileentity.network.TileEntityCraneInserter;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -99,8 +100,14 @@ public class CraneInserter extends BlockCraneBase implements IEnterableBlock {
         }
     }
 
+    @Override
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        TileEntityCraneInserter crane = (TileEntityCraneInserter) world.getTileEntity(pos);
+        crane.isIndirectlyPowered = world.isBlockPowered(pos);
+    }
+
     private static void pushIntoInserter(World world, BlockPos pos, TileEntityCraneInserter inserter, ItemStack toAdd) {
-        if (!world.isBlockPowered(pos)) {
+        if (!inserter.isIndirectlyPowered) {
             EnumFacing outputSide = inserter.getOutputSide();
             TileEntity target = world.getTileEntity(pos.offset(outputSide));
             if (target != null) {

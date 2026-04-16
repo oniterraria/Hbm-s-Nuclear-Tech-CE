@@ -21,7 +21,6 @@ import li.cil.oc.api.machine.Arguments;
 import li.cil.oc.api.machine.Context;
 import li.cil.oc.api.network.SimpleComponent;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -50,6 +49,7 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
     // due to some issues with OC deciding that it's gonna call the component name function before the worldObj is loaded
     // the component name must be cached to prevent it from shitting itself
     String componentName = CompatHandler.nullComponent;
+    boolean supportsOC;
 
     boolean heat;
 
@@ -107,6 +107,7 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
     public TileEntity getTile() {
         if (tile == null || tile.isInvalid() || (tile instanceof TileEntityLoadedBase && !((TileEntityLoadedBase) tile).isLoaded)) {
             tile = this.getTE();
+            supportsOC = tile instanceof CompatHandler.OCComponent;
         }
         return tile;
     }
@@ -410,27 +411,13 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
         return null;
     }
 
-    @Override
-    public @NotNull NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
-    }
-
-    @Override
-    public void handleUpdateTag(@NotNull NBTTagCompound tag) {
-        this.readFromNBT(tag);
-    }
-
     @Override // please work
     @Optional.Method(modid = "OpenComputers")
     public String getComponentName() {
         if(this.world == null) // OC is going too fast, grab from NBT!
             return componentName;
-        if(this.getCoreObject() instanceof CompatHandler.OCComponent) {
+        getTile(); // ensure supportsOC is initialized
+        if(supportsOC) {
             if (componentName == null || componentName.equals(CompatHandler.OCComponent.super.getComponentName())) {
                 componentName = ((CompatHandler.OCComponent) this.getCoreObject()).getComponentName();
             }
@@ -442,7 +429,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
     @Override
     @Optional.Method(modid = "opencomputers")
     public boolean canConnectNode(EnumFacing side) {
-        if(this.getCoreObject() instanceof CompatHandler.OCComponent) {
+        getTile();
+        if(supportsOC) {
             boolean isComponent = false;
             if (this.world != null) {
                 Object nodeTE = Compat.getTileStandard(this.world, this.pos.getX() + side.getXOffset(), this.pos.getY() + side.getYOffset(), this.pos.getZ() + side.getZOffset());
@@ -463,7 +451,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
     @Override
     @Optional.Method(modid = "opencomputers")
     public String[] methods() {
-        if(this.getCoreObject() instanceof CompatHandler.OCComponent)
+        getTile();
+        if(supportsOC)
             return ((CompatHandler.OCComponent) this.getCoreObject()).methods();
         return CompatHandler.OCComponent.super.methods();
     }
@@ -471,7 +460,8 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
     @Override
     @Optional.Method(modid = "opencomputers")
     public Object[] invoke(String method, Context context, Arguments args) throws Exception {
-        if(this.getCoreObject() instanceof CompatHandler.OCComponent)
+        getTile();
+        if(supportsOC)
             return ((CompatHandler.OCComponent) this.getCoreObject()).invoke(method, context, args);
         return CompatHandler.OCComponent.super.invoke(null, null, null);
     }
