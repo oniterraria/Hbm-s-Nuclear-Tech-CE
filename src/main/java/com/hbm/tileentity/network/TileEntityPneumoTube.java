@@ -45,6 +45,8 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     public ForgeDirection insertionDir = ForgeDirection.UNKNOWN;
     public ForgeDirection ejectionDir = ForgeDirection.UNKNOWN;
 
+    public boolean isIndirectlyPowered;
+
     public boolean whitelist = false;
     public boolean redstone = false;
     public byte sendOrder = 0;
@@ -59,6 +61,12 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     public TileEntityPneumoTube() {
         super(15);
         this.compair = new FluidTankNTM(Fluids.AIR, 4_000).withPressure(1);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if(!world.isRemote) isIndirectlyPowered = world.isBlockPowered(pos);
     }
 
     public static int getRangeFromPressure(int pressure) {
@@ -114,7 +122,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
             }
         }
 
-        if (this.isCompressor() && (!this.world.isBlockPowered(pos) ^ this.redstone)) {
+        if (this.isCompressor() && (!isIndirectlyPowered ^ this.redstone)) {
 
             int randTime = Math.abs((int) (world.getTotalWorldTime() + getIdentifier(pos)));
 
@@ -153,6 +161,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 
                     if (moved) {
                         this.compair.setFill(this.compair.getFill() - 50);
+                        this.dataChanged();
 
                         if (this.soundDelay <= 0 && !this.muffled) {
                             world.playSound(null,
@@ -181,7 +190,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
             }
         }
 
-        this.networkPackNT(15);
+        this.networkPackMK2(15);
     }
 
     @Override
@@ -289,7 +298,6 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 
         this.whitelist = nbt.getBoolean("whitelist");
         this.redstone = nbt.getBoolean("redstone");
-
         if (world != null && world.isRemote) {
             world.markBlockRangeForRenderUpdate(pos, pos);
         }
@@ -348,6 +356,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
             setFilterContents(data);
         }
 
+        this.dataChanged();
         this.markDirty();
     }
 
@@ -369,6 +378,13 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     @Override
     public FluidTankNTM[] getReceivingTanks() {
         return new FluidTankNTM[]{compair};
+    }
+
+    @Override
+    public long transferFluid(FluidType type, int pressure, long amount) {
+        long remaining = IFluidStandardReceiverMK2.super.transferFluid(type, pressure, amount);
+        if(remaining != amount) dataChanged();
+        return remaining;
     }
 
     @Override
@@ -396,6 +412,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
         this.whitelist = nbt.getBoolean("whitelist");
         this.redstone = nbt.getBoolean("redstone");
 
+        this.dataChanged();
     }
 
     public static class PneumaticNode extends GenNode<PneumaticNetwork> {

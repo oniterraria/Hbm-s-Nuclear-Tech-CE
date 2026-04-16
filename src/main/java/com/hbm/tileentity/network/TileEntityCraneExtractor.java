@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
 public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGUIProvider, IControlReceiver {
+    public boolean isIndirectlyPowered;
     public boolean isWhitelist = false;
     public boolean maxEject = false;
     protected SideConfig sideConfig;
@@ -97,6 +98,12 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
         }
     }
 
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if(!world.isRemote) isIndirectlyPowered = world.isBlockPowered(pos);
+    }
+
     public boolean canExtractItemCE(int slot, ItemStack stack, EnumFacing side, ISidedInventory sided) {
         if(isCofhCoreLoaded()) {
             return canExtractItemExtended(slot, side);
@@ -125,7 +132,7 @@ public class TileEntityCraneExtractor extends TileEntityCraneBase implements IGU
                 }
             }
 
-            if(tickCounter >= delay && !this.world.isBlockPowered(pos)) {
+            if(tickCounter >= delay && !isIndirectlyPowered) {
                 tickCounter = 0;
                 int amount = 1;
 

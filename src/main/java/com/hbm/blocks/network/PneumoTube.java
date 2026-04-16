@@ -14,6 +14,7 @@ import com.hbm.tileentity.network.TileEntityPneumoTube;
 import com.hbm.util.Compat;
 import com.hbm.util.UnlistedPropertyInteger;
 import mcp.MethodsReturnNonnullByDefault;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -266,6 +267,12 @@ public class PneumoTube extends BlockContainer implements IToolable, ITooltipPro
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
         return getBoundingBox(blockState, worldIn, pos);
+    }
+
+    @Override
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        TileEntityPneumoTube tube = (TileEntityPneumoTube) world.getTileEntity(pos);
+        tube.isIndirectlyPowered = world.isBlockPowered(pos);
     }
 
     public boolean canConnectTo(IBlockAccess world, BlockPos pos, ForgeDirection dir) {
