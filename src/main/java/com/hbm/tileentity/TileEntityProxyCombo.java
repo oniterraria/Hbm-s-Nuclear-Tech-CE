@@ -412,7 +412,7 @@ public class TileEntityProxyCombo extends TileEntityProxyBase implements IEnergy
     }
 
     @Override // please work
-    @Optional.Method(modid = "OpenComputers")
+    @Optional.Method(modid = "opencomputers")
     public String getComponentName() {
         if(this.world == null) // OC is going too fast, grab from NBT!
             return componentName;
