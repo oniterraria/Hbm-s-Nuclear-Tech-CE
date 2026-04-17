@@ -66,9 +66,9 @@ public class RenderRBMKGraph extends TileEntitySpecialRenderer<TileEntityRBMKGra
 				for(int j = 0; j < 2; j++) {
 					int k = v + j;
 					long flux = unit.values[k];
-					double dx = 0.03225;
-					double dy = 0.5 - 0.03125 + (flux - lowest) * 0.1875D / Math.max(range, 1);
-					double dz = 0.375 - k * 0.75 / (unit.values.length - 1);
+					float dx = 0.03225F;
+					float dy = 0.5F - 0.03125F + (flux - lowest) * 0.1875F / Math.max(range, 1);
+					float dz = 0.375F - k * 0.75F / (unit.values.length - 1);
 					buf.appendPositionUnchecked(dx, dy, dz);
 				}
 			}

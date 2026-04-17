@@ -99,10 +99,10 @@ public abstract class Control {
 	@SideOnly(Side.CLIENT)
 	protected final void appendGuiQuad(NTMBufferBuilder buf,float minX,float minY,float maxX,float maxY,float minU,float minV,float maxU,float maxV,int packedColor) {
 		buf.appendPositionTexColorQuadUnchecked(
-				minX, maxY, 0.0D, minU, maxV, packedColor,
-				maxX, maxY, 0.0D, maxU, maxV, packedColor,
-				maxX, minY, 0.0D, maxU, minV, packedColor,
-				minX, minY, 0.0D, minU, minV, packedColor
+				minX, maxY, 0.0F, minU, maxV, packedColor,
+				maxX, maxY, 0.0F, maxU, maxV, packedColor,
+				maxX, minY, 0.0F, maxU, minV, packedColor,
+				minX, minY, 0.0F, minU, minV, packedColor
 		);
 	}
 

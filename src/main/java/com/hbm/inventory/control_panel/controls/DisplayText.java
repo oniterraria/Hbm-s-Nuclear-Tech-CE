@@ -130,10 +130,10 @@ public class DisplayText extends Control {
         float d = 0;
         int packedColor = NTMBufferBuilder.packColor(rgb[0], rgb[1], rgb[2], 1);
         buf.appendPositionTexColorQuadUnchecked(
-                box[0]-d, box[1]-d, -.01, 0, 0, packedColor,
-                box[0]-d, box[3], -.01, 0, 1, packedColor,
-                box[2]+d, box[3], -.01, 1, 1, packedColor,
-                box[2]+d, box[1]-d, -.01, 1, 0, packedColor
+                box[0]-d, box[1]-d, -0.01F, 0, 0, packedColor,
+                box[0]-d, box[3], -0.01F, 0, 1, packedColor,
+                box[2]+d, box[3], -0.01F, 1, 1, packedColor,
+                box[2]+d, box[1]-d, -0.01F, 1, 0, packedColor
         );
         rgb = new float[]{.3F, .3F, .3F};
         d = .05F;

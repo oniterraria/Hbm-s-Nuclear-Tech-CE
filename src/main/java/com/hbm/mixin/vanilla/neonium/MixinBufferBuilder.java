@@ -163,7 +163,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPosition(double x, double y, double z) {
+    public void appendPosition(float x, float y, float z) {
         ensureDrawing(POSITION);
         if (!hasRemainingInts(3)) {
             growBuffer(3 * Integer.BYTES);
@@ -172,7 +172,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionColor(double x, double y, double z, int packedColor) {
+    public void appendPositionColor(float x, float y, float z, int packedColor) {
         ensureDrawing(POSITION_COLOR);
         if (!hasRemainingInts(POSITION_COLOR_INTS_PER_VERTEX)) {
             growBuffer(POSITION_COLOR_INTS_PER_VERTEX * Integer.BYTES);
@@ -181,10 +181,10 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionColorQuad(double x0, double y0, double z0,
-                                        double x1, double y1, double z1,
-                                        double x2, double y2, double z2,
-                                        double x3, double y3, double z3,
+    public void appendPositionColorQuad(float x0, float y0, float z0,
+                                        float x1, float y1, float z1,
+                                        float x2, float y2, float z2,
+                                        float x3, float y3, float z3,
                                         int packedColor) {
         ensureDrawing(POSITION_COLOR);
         if (!hasRemainingInts(POSITION_COLOR_QUAD_INTS)) {
@@ -194,7 +194,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionTex(double x, double y, double z, double u, double v) {
+    public void appendPositionTex(float x, float y, float z, float u, float v) {
         ensureDrawing(POSITION_TEX);
         if (!hasRemainingInts(5)) {
             growBuffer(5 * Integer.BYTES);
@@ -203,7 +203,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionTexColor(double x, double y, double z, double u, double v, int packedColor) {
+    public void appendPositionTexColor(float x, float y, float z, float u, float v, int packedColor) {
         ensureDrawing(POSITION_TEX_COLOR);
         if (!hasRemainingInts(6)) {
             growBuffer(6 * Integer.BYTES);
@@ -212,7 +212,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionTexNormal(double x, double y, double z, double u, double v, int packedNormal) {
+    public void appendPositionTexNormal(float x, float y, float z, float u, float v, int packedNormal) {
         ensureDrawing(POSITION_TEX_NORMAL);
         if (!hasRemainingInts(6)) {
             growBuffer(6 * Integer.BYTES);
@@ -221,7 +221,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionTexLmapColor(double x, double y, double z, double u, double v, int packedLightmap,
+    public void appendPositionTexLmapColor(float x, float y, float z, float u, float v, int packedLightmap,
                                            int packedColor) {
         ensureDrawing(POSITION_TEX_LMAP_COLOR);
         if (!hasRemainingInts(7)) {
@@ -231,7 +231,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionTexColorNormal(double x, double y, double z, double u, double v, int packedColor,
+    public void appendPositionTexColorNormal(float x, float y, float z, float u, float v, int packedColor,
                                              int packedNormal) {
         ensureDrawing(POSITION_TEX_COLOR_NORMAL);
         if (!hasRemainingInts(7)) {
@@ -241,7 +241,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionNormal(double x, double y, double z, int packedNormal) {
+    public void appendPositionNormal(float x, float y, float z, int packedNormal) {
         ensureDrawing(POSITION_NORMAL);
         if (!hasRemainingInts(4)) {
             growBuffer(4 * Integer.BYTES);
@@ -250,7 +250,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendParticlePositionTexColorLmap(double x, double y, double z, double u, double v, int packedColor,
+    public void appendParticlePositionTexColorLmap(float x, float y, float z, float u, float v, int packedColor,
                                                    int packedLightmap) {
         ensureDrawing(PARTICLE_POSITION_TEX_COLOR_LMAP);
         if (!hasRemainingInts(7)) {
@@ -260,7 +260,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionUnchecked(double x, double y, double z) {
+    public void appendPositionUnchecked(float x, float y, float z) {
         long address = hbm$intAddress(vertexCount * 3);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
@@ -269,10 +269,10 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionQuadUnchecked(double x0, double y0, double z0,
-                                            double x1, double y1, double z1,
-                                            double x2, double y2, double z2,
-                                            double x3, double y3, double z3) {
+    public void appendPositionQuadUnchecked(float x0, float y0, float z0,
+                                            float x1, float y1, float z1,
+                                            float x2, float y2, float z2,
+                                            float x3, float y3, float z3) {
         appendPositionUnchecked(x0, y0, z0);
         appendPositionUnchecked(x1, y1, z1);
         appendPositionUnchecked(x2, y2, z2);
@@ -280,7 +280,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionColorUnchecked(double x, double y, double z, int packedColor) {
+    public void appendPositionColorUnchecked(float x, float y, float z, int packedColor) {
         long address = hbm$intAddress(vertexCount * POSITION_COLOR_INTS_PER_VERTEX);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
@@ -290,10 +290,10 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionColorQuadUnchecked(double x0, double y0, double z0,
-                                                 double x1, double y1, double z1,
-                                                 double x2, double y2, double z2,
-                                                 double x3, double y3, double z3,
+    public void appendPositionColorQuadUnchecked(float x0, float y0, float z0,
+                                                 float x1, float y1, float z1,
+                                                 float x2, float y2, float z2,
+                                                 float x3, float y3, float z3,
                                                  int packedColor) {
         long address = hbm$intAddress(vertexCount * POSITION_COLOR_INTS_PER_VERTEX);
 
@@ -321,21 +321,21 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionTexUnchecked(double x, double y, double z, double u, double v) {
+    public void appendPositionTexUnchecked(float x, float y, float z, float u, float v) {
         long address = hbm$intAddress(vertexCount * 5);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
         U.putFloat(address + 8L, applyZOffset(z));
-        U.putFloat(address + 12L, (float) u);
-        U.putFloat(address + 16L, (float) v);
+        U.putFloat(address + 12L, u);
+        U.putFloat(address + 16L, v);
         ++vertexCount;
     }
 
     @Override
-    public void appendPositionTexQuadUnchecked(double x0, double y0, double z0, double u0, double v0,
-                                               double x1, double y1, double z1, double u1, double v1,
-                                               double x2, double y2, double z2, double u2, double v2,
-                                               double x3, double y3, double z3, double u3, double v3) {
+    public void appendPositionTexQuadUnchecked(float x0, float y0, float z0, float u0, float v0,
+                                               float x1, float y1, float z1, float u1, float v1,
+                                               float x2, float y2, float z2, float u2, float v2,
+                                               float x3, float y3, float z3, float u3, float v3) {
         appendPositionTexUnchecked(x0, y0, z0, u0, v0);
         appendPositionTexUnchecked(x1, y1, z1, u1, v1);
         appendPositionTexUnchecked(x2, y2, z2, u2, v2);
@@ -343,62 +343,62 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionTexColorUnchecked(double x, double y, double z, double u, double v, int packedColor) {
+    public void appendPositionTexColorUnchecked(float x, float y, float z, float u, float v, int packedColor) {
         long address = hbm$intAddress(vertexCount * 6);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
         U.putFloat(address + 8L, applyZOffset(z));
-        U.putFloat(address + 12L, (float) u);
-        U.putFloat(address + 16L, (float) v);
+        U.putFloat(address + 12L, u);
+        U.putFloat(address + 16L, v);
         U.putInt(address + 20L, packedColor);
         ++vertexCount;
     }
 
     @Override
-    public void appendPositionTexNormalUnchecked(double x, double y, double z, double u, double v, int packedNormal) {
+    public void appendPositionTexNormalUnchecked(float x, float y, float z, float u, float v, int packedNormal) {
         long address = hbm$intAddress(vertexCount * 6);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
         U.putFloat(address + 8L, applyZOffset(z));
-        U.putFloat(address + 12L, (float) u);
-        U.putFloat(address + 16L, (float) v);
+        U.putFloat(address + 12L, u);
+        U.putFloat(address + 16L, v);
         U.putInt(address + 20L, packedNormal);
         ++vertexCount;
     }
 
     @Override
-    public void appendPositionTexLmapColorUnchecked(double x, double y, double z, double u, double v,
+    public void appendPositionTexLmapColorUnchecked(float x, float y, float z, float u, float v,
                                                     int packedLightmap, int packedColor) {
         long address = hbm$intAddress(vertexCount * 7);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
         U.putFloat(address + 8L, applyZOffset(z));
-        U.putFloat(address + 12L, (float) u);
-        U.putFloat(address + 16L, (float) v);
+        U.putFloat(address + 12L, u);
+        U.putFloat(address + 16L, v);
         U.putInt(address + 20L, packedLightmap);
         U.putInt(address + 24L, packedColor);
         ++vertexCount;
     }
 
     @Override
-    public void appendPositionTexColorNormalUnchecked(double x, double y, double z, double u, double v, int packedColor,
+    public void appendPositionTexColorNormalUnchecked(float x, float y, float z, float u, float v, int packedColor,
                                                       int packedNormal) {
         long address = hbm$intAddress(vertexCount * 7);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
         U.putFloat(address + 8L, applyZOffset(z));
-        U.putFloat(address + 12L, (float) u);
-        U.putFloat(address + 16L, (float) v);
+        U.putFloat(address + 12L, u);
+        U.putFloat(address + 16L, v);
         U.putInt(address + 20L, packedColor);
         U.putInt(address + 24L, packedNormal);
         ++vertexCount;
     }
 
     @Override
-    public void appendPositionTexColorQuadUnchecked(double x0, double y0, double z0, double u0, double v0, int c0,
-                                                    double x1, double y1, double z1, double u1, double v1, int c1,
-                                                    double x2, double y2, double z2, double u2, double v2, int c2,
-                                                    double x3, double y3, double z3, double u3, double v3, int c3) {
+    public void appendPositionTexColorQuadUnchecked(float x0, float y0, float z0, float u0, float v0, int c0,
+                                                    float x1, float y1, float z1, float u1, float v1, int c1,
+                                                    float x2, float y2, float z2, float u2, float v2, int c2,
+                                                    float x3, float y3, float z3, float u3, float v3, int c3) {
         appendPositionTexColorUnchecked(x0, y0, z0, u0, v0, c0);
         appendPositionTexColorUnchecked(x1, y1, z1, u1, v1, c1);
         appendPositionTexColorUnchecked(x2, y2, z2, u2, v2, c2);
@@ -406,7 +406,7 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendPositionNormalUnchecked(double x, double y, double z, int packedNormal) {
+    public void appendPositionNormalUnchecked(float x, float y, float z, int packedNormal) {
         long address = hbm$intAddress(vertexCount * 4);
         U.putFloat(address, applyXOffset(x));
         U.putFloat(address + 4L, applyYOffset(y));
@@ -416,15 +416,15 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendParticlePositionTexColorLmapUnchecked(double x, double y, double z, double u, double v,
+    public void appendParticlePositionTexColorLmapUnchecked(float x, float y, float z, float u, float v,
                                                             int packedColor, int packedLightmap) {
         NTMBufferBuilder.writeParticlePositionTexColorLmap(
                 hbm$intAddress(vertexCount * 7),
                 applyXOffset(x),
                 applyYOffset(y),
                 applyZOffset(z),
-                (float) u,
-                (float) v,
+                u,
+                v,
                 packedColor,
                 packedLightmap
         );
@@ -432,17 +432,17 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Override
-    public void appendParticlePositionTexColorLmapQuadUnchecked(double x0, double y0, double z0, double u0, double v0,
-                                                                double x1, double y1, double z1, double u1, double v1,
-                                                                double x2, double y2, double z2, double u2, double v2,
-                                                                double x3, double y3, double z3, double u3, double v3,
+    public void appendParticlePositionTexColorLmapQuadUnchecked(float x0, float y0, float z0, float u0, float v0,
+                                                                float x1, float y1, float z1, float u1, float v1,
+                                                                float x2, float y2, float z2, float u2, float v2,
+                                                                float x3, float y3, float z3, float u3, float v3,
                                                                 int packedColor, int packedLightmap) {
         NTMBufferBuilder.writeParticlePositionTexColorLmapQuad(
                 hbm$intAddress(vertexCount * 7),
-                applyXOffset(x0), applyYOffset(y0), applyZOffset(z0), (float) u0, (float) v0,
-                applyXOffset(x1), applyYOffset(y1), applyZOffset(z1), (float) u1, (float) v1,
-                applyXOffset(x2), applyYOffset(y2), applyZOffset(z2), (float) u2, (float) v2,
-                applyXOffset(x3), applyYOffset(y3), applyZOffset(z3), (float) u3, (float) v3,
+                applyXOffset(x0), applyYOffset(y0), applyZOffset(z0), u0, v0,
+                applyXOffset(x1), applyYOffset(y1), applyZOffset(z1), u1, v1,
+                applyXOffset(x2), applyYOffset(y2), applyZOffset(z2), u2, v2,
+                applyXOffset(x3), applyYOffset(y3), applyZOffset(z3), u3, v3,
                 packedColor, packedLightmap
         );
         vertexCount += 4;
@@ -469,18 +469,18 @@ public abstract class MixinBufferBuilder implements NTMBufferBuilder {
     }
 
     @Unique
-    private float applyXOffset(double x) {
-        return (float) (x + xOffset);
+    private float applyXOffset(float x) {
+        return x + (float) xOffset;
     }
 
     @Unique
-    private float applyYOffset(double y) {
-        return (float) (y + yOffset);
+    private float applyYOffset(float y) {
+        return y + (float) yOffset;
     }
 
     @Unique
-    private float applyZOffset(double z) {
-        return (float) (z + zOffset);
+    private float applyZOffset(float z) {
+        return z + (float) zOffset;
     }
 
     /**

@@ -78,9 +78,9 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
 
             if (col == null) continue;
 
-            double kx = -0.3725D;
-            double ky = -Math.floor(i / 15f) * 0.125 + 3.625;
-            double kz = -(i % 15) * 0.125 + 0.125D * 7;
+            float kx = -0.3725F;
+            float ky = -(float) Math.floor(i / 15f) * 0.125F + 3.625F;
+            float kz = -(i % 15) * 0.125F + 0.125F * 7F;
 
             float r = 1.0F;
             float g = 1.0F;
@@ -114,13 +114,13 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
             switch (col.type) {
                 case FUEL:
                 case FUEL_SIM:
-                    drawFuel(buf, kx + 0.01, ky, kz, ((RBMKColumn.FuelColumn) col).enrichment);
+                    drawFuel(buf, kx + 0.01F, ky, kz, (float) ((RBMKColumn.FuelColumn) col).enrichment);
                     break;
                 case CONTROL:
-                    drawControl(buf, kx + 0.01, ky, kz, ((RBMKColumn.ControlColumn) col).level);
+                    drawControl(buf, kx + 0.01F, ky, kz, (float) ((RBMKColumn.ControlColumn) col).level);
                     break;
                 case CONTROL_AUTO:
-                    drawControlAuto(buf, kx + 0.01, ky, kz, ((RBMKColumn.ControlColumn) col).level);
+                    drawControlAuto(buf, kx + 0.01F, ky, kz, (float) ((RBMKColumn.ControlColumn) col).level);
                     break;
                 default:
             }
@@ -196,8 +196,8 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
         };
     }
 
-    private void drawColumn(NTMBufferBuilder buf, double x, double y, double z, float r, float g, float b) {
-        double width = 0.0625D * 0.75;
+    private void drawColumn(NTMBufferBuilder buf, float x, float y, float z, float r, float g, float b) {
+        float width = 0.0625F * 0.75F;
         int packedColor = NTMBufferBuilder.packColor(r, g, b, 1.0F);
         buf.appendPositionColorQuadUnchecked(
                 x, y + width, z - width,
@@ -208,22 +208,21 @@ public class RenderRBMKConsole extends TileEntitySpecialRenderer<TileEntityRBMKC
         );
     }
 
-    private void drawFuel(NTMBufferBuilder buf, double x, double y, double z, double enrichment) {
-        this.drawDot(buf, x, y, z, 0F, 0.25F + (float) (enrichment * 0.75D), 0F);
+    private void drawFuel(NTMBufferBuilder buf, float x, float y, float z, float enrichment) {
+        this.drawDot(buf, x, y, z, 0F, 0.25F + enrichment * 0.75F, 0F);
     }
 
-    private void drawControl(NTMBufferBuilder buf, double x, double y, double z, double level) {
-        this.drawDot(buf, x, y, z, (float) level, (float) level, 0F);
+    private void drawControl(NTMBufferBuilder buf, float x, float y, float z, float level) {
+        this.drawDot(buf, x, y, z, level, level, 0F);
     }
 
-    private void drawControlAuto(NTMBufferBuilder buf, double x, double y, double z, double level) {
-        this.drawDot(buf, x, y, z, (float) level, 0F, (float) level);
+    private void drawControlAuto(NTMBufferBuilder buf, float x, float y, float z, float level) {
+        this.drawDot(buf, x, y, z, level, 0F, level);
     }
 
-    private void drawDot(NTMBufferBuilder buf, double x, double y, double z, float r, float g, float b) {
-
-        double width = 0.03125D;
-        double edge = 0.022097D;
+    private void drawDot(NTMBufferBuilder buf, float x, float y, float z, float r, float g, float b) {
+        float width = 0.03125F;
+        float edge = 0.022097F;
         int packedColor = NTMBufferBuilder.packColor(r, g, b, 1.0F);
 
         buf.appendPositionColorQuadUnchecked(

@@ -142,29 +142,29 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
         GlStateManager.disableTexture2D();
         GlStateManager.color(1F, 1F, 1F, 1F);
 
-        double outerLen = 1D + MainRegistry.proxy.me().getRNG().nextDouble() * 0.125D;
-        double narrow = 0.01D;
-        double side = 0.125D;
-        double near = 1.375D;
-        double far = 1.625D;
+        float outerLen = 1F + MainRegistry.proxy.me().getRNG().nextFloat() * 0.125F;
+        float narrow = 0.01F;
+        float side = 0.125F;
+        float near = 1.375F;
+        float far = 1.625F;
 
         int solid = NTMBufferBuilder.packColor(forge.plasmaRed, forge.plasmaGreen, forge.plasmaBlue, 1F);
         int fade = NTMBufferBuilder.packColor(forge.plasmaRed, forge.plasmaGreen, forge.plasmaBlue, 0F);
 
         NTMBufferBuilder buf = NTMImmediate.INSTANCE.beginPositionColorQuads(8);
         // inner pyramid — 4 sides
-        emitPlumeQuad(buf, near, 3D, side, far, 3D, side, far - narrow, 3D - outerLen, side - narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
-        emitPlumeQuad(buf, near, 3D, -side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, -side + narrow, solid, fade);
-        emitPlumeQuad(buf, near, 3D, side, near, 3D, -side, near + narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
-        emitPlumeQuad(buf, far, 3D, side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, far - narrow, 3D - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3F, side, far, 3F, side, far - narrow, 3F - outerLen, side - narrow, near + narrow, 3F - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3F, -side, far, 3F, -side, far - narrow, 3F - outerLen, -side + narrow, near + narrow, 3F - outerLen, -side + narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3F, side, near, 3F, -side, near + narrow, 3F - outerLen, -side + narrow, near + narrow, 3F - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, far, 3F, side, far, 3F, -side, far - narrow, 3F - outerLen, -side + narrow, far - narrow, 3F - outerLen, side - narrow, solid, fade);
 
         // outer pyramid — wider narrow + longer len
-        narrow = 0.0625D * 1.5D;
-        outerLen *= 1.5D;
-        emitPlumeQuad(buf, near, 3D, side, far, 3D, side, far - narrow, 3D - outerLen, side - narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
-        emitPlumeQuad(buf, near, 3D, -side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, -side + narrow, solid, fade);
-        emitPlumeQuad(buf, near, 3D, side, near, 3D, -side, near + narrow, 3D - outerLen, -side + narrow, near + narrow, 3D - outerLen, side - narrow, solid, fade);
-        emitPlumeQuad(buf, far, 3D, side, far, 3D, -side, far - narrow, 3D - outerLen, -side + narrow, far - narrow, 3D - outerLen, side - narrow, solid, fade);
+        narrow = 0.0625F * 1.5F;
+        outerLen *= 1.5F;
+        emitPlumeQuad(buf, near, 3F, side, far, 3F, side, far - narrow, 3F - outerLen, side - narrow, near + narrow, 3F - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3F, -side, far, 3F, -side, far - narrow, 3F - outerLen, -side + narrow, near + narrow, 3F - outerLen, -side + narrow, solid, fade);
+        emitPlumeQuad(buf, near, 3F, side, near, 3F, -side, near + narrow, 3F - outerLen, -side + narrow, near + narrow, 3F - outerLen, side - narrow, solid, fade);
+        emitPlumeQuad(buf, far, 3F, side, far, 3F, -side, far - narrow, 3F - outerLen, -side + narrow, far - narrow, 3F - outerLen, side - narrow, solid, fade);
         NTMImmediate.INSTANCE.draw();
 
         GlStateManager.depthMask(true);
@@ -176,10 +176,10 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
     }
 
     private static void emitPlumeQuad(NTMBufferBuilder buf,
-                                      double x1, double y1, double z1,
-                                      double x2, double y2, double z2,
-                                      double x3, double y3, double z3,
-                                      double x4, double y4, double z4,
+                                      float x1, float y1, float z1,
+                                      float x2, float y2, float z2,
+                                      float x3, float y3, float z3,
+                                      float x4, float y4, float z4,
                                       int solid, int fade) {
         buf.appendPositionColorUnchecked(x1, y1, z1, solid);
         buf.appendPositionColorUnchecked(x2, y2, z2, solid);
@@ -298,36 +298,36 @@ public class RenderFusionPlasmaForge extends TileEntitySpecialRenderer<TileEntit
         // reuse the stellar flux fluid texture
         bindTexture(Fluids.STELLAR_FLUX.getTexture());
 
-        double offset = ((MainRegistry.proxy.me().ticksExisted + partialTicks) / 15D) % 1D;
-        double in = 0.4375D;
-        double b = 1D;
-        double t = 1.5D;
-        double h = b + t;
+        float offset = ((MainRegistry.proxy.me().ticksExisted + partialTicks) / 15F) % 1F;
+        float in = 0.4375F;
+        float b = 1F;
+        float t = 1.5F;
+        float h = b + t;
 
         int solid = NTMBufferBuilder.packColor(1F, 1F, 1F, 1F);
         int fade = NTMBufferBuilder.packColor(1F, 1F, 1F, 0F);
 
         NTMBufferBuilder buf = NTMImmediate.INSTANCE.beginPositionTexColorQuads(4);
         buf.appendPositionTexColorQuadUnchecked(
-                -in, b, in, offset + t, 0D, solid,
-                -in, h, in, offset, 0D, fade,
-                -in, h, -in, offset, 1D, fade,
-                -in, b, -in, offset + t, 1D, solid);
+                -in, b, in, offset + t, 0F, solid,
+                -in, h, in, offset, 0F, fade,
+                -in, h, -in, offset, 1F, fade,
+                -in, b, -in, offset + t, 1F, solid);
         buf.appendPositionTexColorQuadUnchecked(
-                in, h, in, offset, 0D, fade,
-                in, b, in, offset + t, 0D, solid,
-                in, b, -in, offset + t, 1D, solid,
-                in, h, -in, offset, 1D, fade);
+                in, h, in, offset, 0F, fade,
+                in, b, in, offset + t, 0F, solid,
+                in, b, -in, offset + t, 1F, solid,
+                in, h, -in, offset, 1F, fade);
         buf.appendPositionTexColorQuadUnchecked(
-                in, b, in, offset + t, 0D, solid,
-                in, h, in, offset, 0D, fade,
-                -in, h, in, offset, 1D, fade,
-                -in, b, in, offset + t, 1D, solid);
+                in, b, in, offset + t, 0F, solid,
+                in, h, in, offset, 0F, fade,
+                -in, h, in, offset, 1F, fade,
+                -in, b, in, offset + t, 1F, solid);
         buf.appendPositionTexColorQuadUnchecked(
-                in, h, -in, offset, 0D, fade,
-                in, b, -in, offset + t, 0D, solid,
-                -in, b, -in, offset + t, 1D, solid,
-                -in, h, -in, offset, 1D, fade);
+                in, h, -in, offset, 0F, fade,
+                in, b, -in, offset + t, 0F, solid,
+                -in, b, -in, offset + t, 1F, solid,
+                -in, h, -in, offset, 1F, fade);
         NTMImmediate.INSTANCE.draw();
 
         GlStateManager.depthMask(true);

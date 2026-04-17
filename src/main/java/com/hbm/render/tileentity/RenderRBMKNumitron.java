@@ -55,35 +55,35 @@ public class RenderRBMKNumitron extends TileEntitySpecialRenderer<TileEntityRBMK
 
 			this.bindTexture(ResourceManager.rbmk_numitron_lights_tex);
 
-			double scale = 200D;
-			double w = 8D / scale;
-			double h = 13D / scale;
-			double yOffset = 0.5625D;
+			float scale = 200F;
+			float w = 8F / scale;
+			float h = 13F / scale;
+			float yOffset = 0.5625F;
 
 			String value = BobMathUtil.getShortNumber(unit.value);
 			while(value.length() < 7) value = "0" + value;
 
 			NTMBufferBuilder buf = NTMImmediate.INSTANCE.beginPositionTexNormalQuads(7);
 			for(int j = 0; j < 7; j++) {
-				double zOffset = (j - 3) * 0.1D;
+				float zOffset = (j - 3F) * 0.1F;
 				char c = value.charAt(j);
-				double u = -1;
-				double v = 0;
-				if(c == '.') {u = 0.9; v = 0.5;}
-				if(c == '-') {u = 0.8; v = 0.5;}
-				else if(c == 'k') {u = 0.0; v = 0.5;}
-				else if(c == 'M') {u = 0.1; v = 0.5;}
-				else if(c == 'G') {u = 0.2; v = 0.5;}
-				else if(c == 'T') {u = 0.3; v = 0.5;}
-				else if(c == 'P') {u = 0.4; v = 0.5;}
-				else if(c == 'E') {u = 0.5; v = 0.5;} // i would love to say this sucks, but this is actually surprisingly easy to read and probably the most performant way of doing it
+				float u = -1F;
+                float v = 0F;
+				if(c == '.') {u = 0.9F; v = 0.5F;}
+				if(c == '-') {u = 0.8F; v = 0.5F;}
+				else if(c == 'k') {u = 0.0F; v = 0.5F;}
+				else if(c == 'M') {u = 0.1F; v = 0.5F;}
+				else if(c == 'G') {u = 0.2F; v = 0.5F;}
+				else if(c == 'T') {u = 0.3F; v = 0.5F;}
+				else if(c == 'P') {u = 0.4F; v = 0.5F;}
+				else if(c == 'E') {u = 0.5F; v = 0.5F;} // i would love to say this sucks, but this is actually surprisingly easy to read and probably the most performant way of doing it
 				int charVal = c - '0'; // no string operations, no int parsing, no nothing, we just rawdog shit shit
-				if(charVal >= 0 && charVal <= 9) {u = 0.1 * charVal; v = 0.0;}
-				if(u == -1) {u = 0.8; v = 0.5;}
-				buf.appendPositionTexNormalUnchecked(0.03135, -h + yOffset,  w - zOffset, u,       v + 0.5, PACKED_NORMAL_UP);
-				buf.appendPositionTexNormalUnchecked(0.03135,  h + yOffset,  w - zOffset, u,       v,       PACKED_NORMAL_UP);
-				buf.appendPositionTexNormalUnchecked(0.03135,  h + yOffset, -w - zOffset, u + 0.1, v,       PACKED_NORMAL_UP);
-				buf.appendPositionTexNormalUnchecked(0.03135, -h + yOffset, -w - zOffset, u + 0.1, v + 0.5, PACKED_NORMAL_UP);
+				if(charVal >= 0 && charVal <= 9) {u = 0.1F * charVal; v = 0.0F;}
+				if(u == -1) {u = 0.8F; v = 0.5F;}
+				buf.appendPositionTexNormalUnchecked(0.03135F, -h + yOffset,  w - zOffset, u,        v + 0.5F, PACKED_NORMAL_UP);
+				buf.appendPositionTexNormalUnchecked(0.03135F,  h + yOffset,  w - zOffset, u,        v,        PACKED_NORMAL_UP);
+				buf.appendPositionTexNormalUnchecked(0.03135F,  h + yOffset, -w - zOffset, u + 0.1F, v,        PACKED_NORMAL_UP);
+				buf.appendPositionTexNormalUnchecked(0.03135F, -h + yOffset, -w - zOffset, u + 0.1F, v + 0.5F, PACKED_NORMAL_UP);
 			}
 			NTMImmediate.INSTANCE.draw();
 
