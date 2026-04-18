@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -154,7 +155,7 @@ public final class VAORenderCallsitePlugin implements Plugin {
         if (!RL_TYPE_SIMPLE.equals(simpleNameOf(newRL.clazz.toString()))) return null;
         if (newRL.args.size() < 2) return null;
         JCExpression pathArg = newRL.args.get(1);
-        if (pathArg instanceof JCLiteral lit && lit.value instanceof String s) return s;
+        if (pathArg instanceof JCLiteral lit && lit.value instanceof String s) return s.toLowerCase(Locale.ROOT);
         return null;
     }
 
