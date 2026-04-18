@@ -63,9 +63,9 @@ public class DataValueComposite extends DataValue {
 	@Override
 	public void readFromNBT(NBTBase nbt) {
 		if (nbt instanceof NBTTagCompound compound) {
-			for (String s : compound.getKeySet()) {
+			dataMap.clear();
+			for (String s : compound.getKeySet())
 				dataMap.put(s,compound.getString(s));
-			}
 		}
 	}
 
