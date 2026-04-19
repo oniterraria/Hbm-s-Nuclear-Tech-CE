@@ -61,7 +61,7 @@ public class SubElementNodeEditor extends SubElement {
 		this.sendEvents = sendEvents;
 	}
 
-	private void descendSubsystem(Node node) {
+	public void descendSubsystem(Node node) {
 		systemHistoryStack.push(currentSystem);
 		currentSystem = currentSystem.subSystems.get(node);
 
@@ -293,13 +293,8 @@ public class SubElementNodeEditor extends SubElement {
 		} else if(button == 0){
 			// doing this here for now cus i want buttons to be able to make gui changes
 			NodeElement pressed = currentSystem.getNodeElementPressed(mouseX, mouseY);
-			if (pressed != null) {
-				switch (pressed.name) {
-					case "Edit Body": {
-						descendSubsystem(pressed.parent);
-					}
-				}
-			}
+			if (pressed != null)
+				pressed.onClicked(this);
 			currentSystem.onClick(mouseX, mouseY);
 		}
 		if(button == 2){

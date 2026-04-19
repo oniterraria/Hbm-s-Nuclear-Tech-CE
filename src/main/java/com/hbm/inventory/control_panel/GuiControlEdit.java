@@ -154,7 +154,7 @@ public class GuiControlEdit extends GuiContainer {
 			subElementStack.getFirst().actionPerformed(button);
 	}
 	
-	protected void pushElement(SubElement e){
+	public void pushElement(SubElement e){
 		subElementStack.getFirst().enableButtons(false);
 		subElementStack.getFirst().onElementClose();
 		e.lock = true;
@@ -163,7 +163,7 @@ public class GuiControlEdit extends GuiContainer {
 		subElementStack.addFirst(e);
 	}
 	
-	protected void popElement(){
+	public void popElement(){
 		SubElement e = subElementStack.removeFirst();
 		e.enableButtons(false);
 		e.onElementClose();
