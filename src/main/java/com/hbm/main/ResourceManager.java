@@ -143,6 +143,7 @@ public class ResourceManager {
     //Sphere
     public static final WaveFrontObjectVAO sphere_ruv = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/sphere_ruv.obj")).asVBO();
     public static final WaveFrontObjectVAO sphere_uv_anim = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/sphere_uv.hmf")).asVBO();
+    public static final WaveFrontObjectVAO sphere_new = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/sphere_new.obj")).asVBO();
     //Meteor
     public static final WaveFrontObjectVAO meteor = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/weapons/meteor.obj")).asVBO();
     //Guns
@@ -425,10 +426,14 @@ public class ResourceManager {
     public static final WaveFrontObjectVAO rbmk_button = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/button.obj")).asVBO();
     public static final WaveFrontObjectVAO rbmk_gauge = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/gauge.obj")).asVBO();
     public static final WaveFrontObjectVAO rbmk_numitron = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/numitron.obj")).asVBO();
+    public static final WaveFrontObjectVAO rbmk_lever = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/lever.obj")).asVBO();
+    public static final WaveFrontObjectVAO rbmk_indicator = new HFRWavefrontObject(new ResourceLocation(Tags.MODID, "models/rbmk/indicator.obj")).asVBO();
     public static final ResourceLocation rbmk_keypad_tex = new ResourceLocation(Tags.MODID, "textures/models/network/keypad.png");
     public static final ResourceLocation rbmk_gauge_tex = new ResourceLocation(Tags.MODID, "textures/models/network/gauge.png");
     public static final ResourceLocation rbmk_numitron_tex = new ResourceLocation(Tags.MODID, "textures/models/network/numitron.png");
     public static final ResourceLocation rbmk_numitron_lights_tex = new ResourceLocation(Tags.MODID, "textures/models/network/numitron_lights.png");
+    public static final ResourceLocation rbmk_lever_tex = new ResourceLocation(Tags.MODID, "textures/models/network/lever.png");
+    public static final ResourceLocation rbmk_indicator_tex = new ResourceLocation(Tags.MODID, "textures/models/network/indicator.png");
 
     public static final ResourceLocation rbmk_crane_console_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/crane_console.png");
     public static final ResourceLocation rbmk_crane_tex = new ResourceLocation(Tags.MODID, "textures/models/machines/rbmk_crane.png");

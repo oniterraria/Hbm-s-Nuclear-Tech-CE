@@ -32,9 +32,6 @@ public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluid
     private boolean cachedConnectionMaskValid;
 
     public byte getCachedConnectionMask(IBlockAccess access) {
-        if (world.isRemote) {
-            return computeConnectionMask(access);
-        }
         if (!this.cachedConnectionMaskValid) {
             this.cachedConnectionMask = computeConnectionMask(access);
             this.cachedConnectionMaskValid = true;
@@ -144,6 +141,7 @@ public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluid
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.type = Fluids.fromID(nbt.getInteger("type"));
+        this.cachedConnectionMaskValid = false;
     }
 
     @Override

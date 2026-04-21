@@ -40,7 +40,6 @@ import com.hbm.items.gear.ArmorFSB;
 import com.hbm.items.machine.IItemFluidIdentifier;
 import com.hbm.items.special.ItemHot;
 import com.hbm.items.tool.ItemDigammaDiagnostic;
-import com.hbm.items.tool.ItemGuideBook;
 import com.hbm.items.weapon.ItemGunBase;
 import com.hbm.items.weapon.sedna.BulletConfig;
 import com.hbm.items.weapon.sedna.ItemGunBaseNT;
@@ -1307,7 +1306,7 @@ public class ModEventHandler {
                 }
             }
 
-            if(GeneralConfig.enableGuideBook) {
+            /*if(GeneralConfig.enableGuideBook) {
                 IHBMData props = HbmCapability.getData(player);
 
                 if(!props.hasReceivedBook()) {
@@ -1316,7 +1315,7 @@ public class ModEventHandler {
                         props.setReceivedBook(true);
                     }
                 }
-            }
+            }*/
 
             if(GeneralConfig.enableServerRecipeSync) {
                 File recDir = new File(MainRegistry.configDir.getAbsolutePath() + File.separatorChar + "hbmRecipes");

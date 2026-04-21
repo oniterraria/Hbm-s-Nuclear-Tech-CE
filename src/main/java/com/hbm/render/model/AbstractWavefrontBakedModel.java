@@ -65,11 +65,20 @@ public abstract class AbstractWavefrontBakedModel extends AbstractBakedModel {
                                               boolean applyShading,
                                               boolean centerToBlock, TextureAtlasSprite sprite, int tintIndex,
                                               float extraTx, float extraTy, float extraTz) {
+        return bakeSimpleQuads(partNames, roll, pitch, yaw, applyShading, centerToBlock, sprite, tintIndex,
+                extraTx, extraTy, extraTz, 1.0F, 1.0F);
+    }
+
+    protected List<BakedQuad> bakeSimpleQuads(Set<String> partNames, float roll, float pitch, float yaw,
+                                              boolean applyShading,
+                                              boolean centerToBlock, TextureAtlasSprite sprite, int tintIndex,
+                                              float extraTx, float extraTy, float extraTz,
+                                              float uScale, float vScale) {
         List<FaceGeometry> geometries = buildGeometry(partNames, roll, pitch, yaw, applyShading, centerToBlock, extraTx,
                 extraTy, extraTz);
         List<BakedQuad> quads = new ArrayList<>(geometries.size());
         for (FaceGeometry geometry : geometries) {
-            quads.add(geometry.buildQuad(sprite, tintIndex));
+            quads.add(geometry.buildQuad(sprite, tintIndex, uScale, vScale));
         }
         return quads;
     }

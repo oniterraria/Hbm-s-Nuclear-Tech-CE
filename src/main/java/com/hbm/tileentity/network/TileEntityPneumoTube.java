@@ -81,9 +81,9 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     }
 
     private void ensureMasks(IBlockAccess access) {
-        if (world.isRemote || !this.cachedMasksValid) {
+        if (!this.cachedMasksValid) {
             recomputeMasks(access);
-            if (!world.isRemote) this.cachedMasksValid = true;
+            this.cachedMasksValid = true;
         }
     }
 
@@ -330,6 +330,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 
         this.whitelist = nbt.getBoolean("whitelist");
         this.redstone = nbt.getBoolean("redstone");
+        this.cachedMasksValid = false;
         if (world != null && world.isRemote) {
             world.markBlockRangeForRenderUpdate(pos, pos);
         }

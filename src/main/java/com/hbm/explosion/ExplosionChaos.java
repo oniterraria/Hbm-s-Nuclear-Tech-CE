@@ -613,24 +613,6 @@ public class ExplosionChaos {
 		world.spawnEntity(entityfallingblock);
 	}
 
-	public static void plasma(World world, int x, int y, int z, int radius) {
-        if(!CompatibilityConfig.isWarDim(world)) return;
-        int radiusSqHalf = (radius * radius) / 2;
-        
-        forEachBlockInSphere(world, null, x, y, z, radius, pos -> {
-            if(world.rand.nextInt(radiusSqHalf / 2) > 0) { 
-                IBlockState state = world.getBlockState(pos);
-                Block block = state.getBlock();
-                if(block.getExplosionResistance(null) > 0.1F) return;
-                if(block != Blocks.BEDROCK && block != ModBlocks.statue_elb
-                        && block != ModBlocks.statue_elb_g
-                        && block != ModBlocks.statue_elb_w
-                        && block != ModBlocks.statue_elb_f)
-                    world.setBlockState(pos, ModBlocks.plasma.getDefaultState());
-            }
-        });
-    }
-
 	// Drillgon200: This method name irks me.
 	public static void tauMeSinPi(World world, double x, double y, double z, int count, Entity shooter, Entity tau) {
 

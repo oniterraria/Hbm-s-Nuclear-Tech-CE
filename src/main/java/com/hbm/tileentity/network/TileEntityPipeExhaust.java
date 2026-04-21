@@ -29,7 +29,6 @@ public class TileEntityPipeExhaust extends TileEntity implements IFluidPipeMK2, 
 
     @Override
     public byte getCachedConnectionMask(IBlockAccess access) {
-        if (world.isRemote) return computeConnectionMask(access);
         if (!this.cachedConnectionMaskValid) {
             this.cachedConnectionMask = computeConnectionMask(access);
             this.cachedConnectionMaskValid = true;

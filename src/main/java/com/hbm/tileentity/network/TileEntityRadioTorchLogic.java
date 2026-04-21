@@ -121,11 +121,11 @@ public class TileEntityRadioTorchLogic extends TileEntityLoadedBase implements I
 
     public boolean parseSignal(String signal, int index) {
         if (conditions[index] <= 5) { //if a non-string operator
-            int sig;
-            int map;
+            long sig;
+            long map;
             try {
-                sig = Integer.parseInt(signal);
-                map = Integer.parseInt(mapping[index]);
+                sig = Long.parseLong(signal);
+                map = Long.parseLong(mapping[index]);
             } catch (Exception x) {
                 return false; //not a valid input; skip! slightly annoying about the mapping but we'll restrict input anyway
             }

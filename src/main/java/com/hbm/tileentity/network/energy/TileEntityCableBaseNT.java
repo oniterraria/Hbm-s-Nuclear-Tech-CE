@@ -34,9 +34,6 @@ public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEner
     private boolean cachedConnectionMaskValid;
 
     public byte getCachedConnectionMask(IBlockAccess access) {
-        if (world.isRemote) {
-            return BlockCable.computeConnectionMask(access, pos);
-        }
         if (!this.cachedConnectionMaskValid) {
             this.cachedConnectionMask = BlockCable.computeConnectionMask(access, pos);
             this.cachedConnectionMaskValid = true;

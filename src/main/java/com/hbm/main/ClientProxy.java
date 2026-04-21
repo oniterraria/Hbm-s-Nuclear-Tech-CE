@@ -1771,10 +1771,11 @@ public class ClientProxy extends ServerProxy {
                 }
             }
             case "tau" -> {
+                boolean small = data.getBoolean("small");
                 for (int i = 0; i < data.getByte("count"); i++)
                     Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleHbmSpark(world, x, y, z,
-                            rand.nextGaussian() * 0.05, 0.05, rand.nextGaussian() * 0.05));
-                Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleHadron(world, x, y, z));
+                            rand.nextGaussian() * 0.05, 0.05, rand.nextGaussian() * 0.05).makeSmall(small));
+                Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleHadron(world, x, y, z).makeSmall(small));
             }
             case "vanish" -> vanish(data.getInteger("ent"));
             case "giblets" -> {

@@ -26,8 +26,16 @@ public class ParticleHadron extends Particle {
 	public ParticleHadron(World worldIn, double posXIn, double posYIn, double posZIn) {
 		super(worldIn, posXIn, posYIn, posZIn);
 		this.particleMaxAge = 10;
+		this.particleScale = 1F;
 	}
-	
+
+	public ParticleHadron makeSmall(boolean small) {
+		if(!small) return this;
+		this.particleScale = 0.5F;
+		this.particleMaxAge = 5;
+		return this;
+	}
+
 	@Override
 	public int getFXLayer() {
 		return 3;
@@ -46,7 +54,7 @@ public class ParticleHadron extends Particle {
 
 		this.particleAlpha = 1 - (((float)this.particleAge + partialTicks) / (float)this.particleMaxAge);
 		this.particleAlpha = MathHelper.clamp(this.particleAlpha, 0, 1);
-		float f4 = (this.particleAge + partialTicks) * 0.15F;
+		float f4 = (this.particleAge + partialTicks) * 0.15F * this.particleScale;
 
 	    float f5 = (float) (this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
 	    float f6 = (float) (this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);

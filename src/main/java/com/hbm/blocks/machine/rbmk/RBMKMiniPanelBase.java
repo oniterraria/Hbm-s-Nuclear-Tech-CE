@@ -39,7 +39,7 @@ import java.util.List;
 
 public class RBMKMiniPanelBase extends BlockContainer implements IDynamicModels, ITooltipProvider {
 	@SideOnly(Side.CLIENT)
-	private TextureAtlasSprite sprite;
+	protected TextureAtlasSprite sprite;
 
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 

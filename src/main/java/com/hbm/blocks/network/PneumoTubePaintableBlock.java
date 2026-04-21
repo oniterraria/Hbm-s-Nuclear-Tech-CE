@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.hbm.Tags;
 import com.hbm.api.block.IToolable;
+import com.hbm.blocks.ITooltipProvider;
 import com.hbm.blocks.ModSoundTypes;
 import com.hbm.blocks.generic.BlockBakeBase;
 import com.hbm.interfaces.AutoRegister;
@@ -11,19 +12,23 @@ import com.hbm.interfaces.ICopiable;
 import com.hbm.lib.ForgeDirection;
 import com.hbm.main.MainRegistry;
 import com.hbm.render.block.BlockBakeFrame;
+import com.hbm.render.block.SimpleStateMapper;
 import com.hbm.render.model.BakedModelTransforms;
 import com.hbm.tileentity.network.TileEntityPneumoTube;
 import com.hbm.util.Compat;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
@@ -48,14 +53,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.util.vector.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 // there were some fucking mumbo jumbo conversions with forgedirection <-> enumfacing, don't mind me
-public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable {
+public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable, ITooltipProvider {
 
     public static final IUnlistedProperty<IBlockState> DISGUISED_STATE = new SimpleUnlistedProperty<>("disguised_state", IBlockState.class);
+    public static final PropertyBool DEFUSED = PropertyBool.create("defused");
     public static final IUnlistedProperty<EnumFacing> INSERTION_DIR = new SimpleUnlistedProperty<>("insertion_dir", EnumFacing.class);
     public static final IUnlistedProperty<EnumFacing> EJECTION_DIR = new SimpleUnlistedProperty<>("ejection_dir", EnumFacing.class);
 
@@ -70,14 +77,20 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
 
     public PneumoTubePaintableBlock(String name) {
         super(Material.IRON, name, BlockBakeFrame.cubeAll("pneumatic_tube_paintable"));
-        this.setDefaultState(this.blockState.getBaseState());
+        this.setDefaultState(this.blockState.getBaseState().withProperty(DEFUSED, false));
         this.setSoundType(ModSoundTypes.pipe);
         this.useNeighborBrightness = true;
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new ExtendedBlockState(this, new IProperty[0], new IUnlistedProperty[]{DISGUISED_STATE, INSERTION_DIR, EJECTION_DIR});
+        return new ExtendedBlockState(this, new IProperty[]{DEFUSED}, new IUnlistedProperty[]{DISGUISED_STATE, INSERTION_DIR, EJECTION_DIR});
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public StateMapperBase getStateMapper(ResourceLocation loc) {
+        return new SimpleStateMapper(loc);
     }
 
     @Override
@@ -92,12 +105,12 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        return this.getDefaultState();
+        return this.getDefaultState().withProperty(DEFUSED, meta != 0);
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        return 0;
+        return state.getValue(DEFUSED) ? 1 : 0;
     }
 
     @Override
@@ -235,6 +248,12 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
             world.markChunkDirty(pos, tube);
             world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
             return true;
+        } else if (tool == ToolType.DEFUSER) {
+            if (!world.isRemote) {
+                IBlockState state = world.getBlockState(pos);
+                world.setBlockState(pos, state.cycleProperty(DEFUSED), 3);
+            }
+            return true;
         }
 
         return false;
@@ -279,6 +298,12 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
         event.getModelRegistry().putObject(inventory, model);
         event.getModelRegistry().putObject(normal, model);
     }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        this.addStandardInfo(tooltip);
+    }
+
     @AutoRegister
     public static class TileEntityPneumoTubePaintable extends TileEntityPneumoTube implements ICopiable {
 
@@ -405,6 +430,7 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
             if (side == null) return ImmutableList.of();
             BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
             boolean tubeLayer = (layer == null || layer == BlockRenderLayer.CUTOUT_MIPPED);
+            boolean defused = state.getValue(DEFUSED);
             IBlockState disguiseState = null;
             EnumFacing insertion = null;
             EnumFacing ejection = null;
@@ -423,7 +449,7 @@ public class PneumoTubePaintableBlock extends BlockBakeBase implements IToolable
             } else if (tubeLayer) {
                 base = baseFaces.get(side);
             }
-            if (!tubeLayer) return base;
+            if (!tubeLayer || defused) return base;
             BakedQuad overlayQuad = selectOverlay(side, insertion, ejection);
             if (base.isEmpty()) return ImmutableList.of(overlayQuad);
             ArrayList<BakedQuad> out = new ArrayList<>(base.size() + 1);

@@ -1,6 +1,7 @@
 package com.hbm.tileentity.machine.rbmk;
 
 import com.hbm.api.fluidmk2.IFluidStandardTransceiverMK2;
+import com.hbm.api.redstoneoverradio.IRORValueProvider;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.capability.NTMFluidHandlerWrapper;
 import com.hbm.entity.projectile.EntityRBMKDebris.DebrisType;
@@ -41,7 +42,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "opencomputers")})
 @AutoRegister
-public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements IFluidStandardTransceiverMK2, IGUIProvider, SimpleComponent, CompatHandler.OCComponent, IConnectionAnchors {
+public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements IFluidStandardTransceiverMK2, IGUIProvider, SimpleComponent, CompatHandler.OCComponent, IConnectionAnchors, IRORValueProvider {
 
 	public FluidTankNTM feed;
 	public FluidTankNTM steam;
@@ -308,5 +309,20 @@ public class TileEntityRBMKHeater extends TileEntityRBMKSlottedBase implements I
 	@SideOnly(Side.CLIENT)
 	public GuiScreen provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIRBMKHeater(player.inventory, this);
+	}
+
+	@Override
+	public String[] getFunctionInfo() {
+		return new String[] {
+				PREFIX_VALUE + "in",
+				PREFIX_VALUE + "out"
+		};
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "in").equals(name))  return "" + this.feed.getFill();
+		if((PREFIX_VALUE + "out").equals(name)) return "" + this.steam.getFill();
+		return null;
 	}
 }

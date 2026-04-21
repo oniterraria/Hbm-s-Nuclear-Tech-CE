@@ -22,7 +22,7 @@ import java.io.IOException;
 public class GUIScreenRBMKGauge extends GuiScreen {
 
 	private static ResourceLocation texture = new ResourceLocation(Tags.MODID + ":textures/gui/machine/gui_rbmk_gauge.png");
-	public TileEntityRBMKGauge keypad;
+	public TileEntityRBMKGauge gauge;
 	protected int xSize = 256;
 	protected int ySize = 204;
 	protected int guiLeft;
@@ -36,8 +36,8 @@ public class GUIScreenRBMKGauge extends GuiScreen {
 	protected boolean[] active = new boolean[4];
 	protected boolean[] polling = new boolean[4];
 
-	public GUIScreenRBMKGauge(TileEntityRBMKGauge keypad) {
-		this.keypad = keypad;
+	public GUIScreenRBMKGauge(TileEntityRBMKGauge gauge) {
+		this.gauge = gauge;
 	}
 
 	@Override
@@ -52,21 +52,21 @@ public class GUIScreenRBMKGauge extends GuiScreen {
 		int oY = 4;
 
 		for(int i = 0; i < 4; i++) {
-			String col = Integer.toHexString(keypad.gauges[i].color);
+			String col = Integer.toHexString(gauge.gauges[i].color);
 			while(col.length() < 6) col = "0" + col;
 			color[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 55 + oY + i * 36, 72 - oX * 2, 14);
 			GUIScreenRBMKKeyPad.setupTextFieldStandard(color[i], 6, col);
 			label[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 175 + oX, guiTop + 55 + oY + i * 36, 72 - oX * 2, 14);
-			GUIScreenRBMKKeyPad.setupTextFieldStandard(label[i], 15, keypad.gauges[i].label);
+			GUIScreenRBMKKeyPad.setupTextFieldStandard(label[i], 15, gauge.gauges[i].label);
 			rtty[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 27 + oX, guiTop + 73 + oY + i * 36, 72 - oX * 2, 14);
-			GUIScreenRBMKKeyPad.setupTextFieldStandard(rtty[i], 10, keypad.gauges[i].rtty);
+			GUIScreenRBMKKeyPad.setupTextFieldStandard(rtty[i], 10, gauge.gauges[i].rtty);
 			min[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 121 + oX, guiTop + 73 + oY + i * 36, 52 - oX * 2, 14);
-			GUIScreenRBMKKeyPad.setupTextFieldStandard(min[i], 32, keypad.gauges[i].min + "");
+			GUIScreenRBMKKeyPad.setupTextFieldStandard(min[i], 32, gauge.gauges[i].min + "");
 			max[i] = new GuiTextField(0, this.fontRenderer, guiLeft + 195 + oX, guiTop + 73 + oY + i * 36, 52 - oX * 2, 14);
-			GUIScreenRBMKKeyPad.setupTextFieldStandard(max[i], 32, keypad.gauges[i].max + "");
+			GUIScreenRBMKKeyPad.setupTextFieldStandard(max[i], 32, gauge.gauges[i].max + "");
 
-			active[i] = keypad.gauges[i].active;
-			polling[i] = keypad.gauges[i].polling;
+			active[i] = gauge.gauges[i].active;
+			polling[i] = gauge.gauges[i].polling;
 		}
 	}
 
@@ -139,7 +139,7 @@ public class GUIScreenRBMKGauge extends GuiScreen {
 				try { data.setInteger("min" + i, Integer.parseInt(this.min[i].getText())); } catch(Exception ex) { }
 				try { data.setInteger("max" + i, Integer.parseInt(this.max[i].getText())); } catch(Exception ex) { }
 			}
-			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, keypad.getPos().getX(), keypad.getPos().getY(), keypad.getPos().getZ()));
+			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, gauge.getPos().getX(), gauge.getPos().getY(), gauge.getPos().getZ()));
 			return;
 		}
 

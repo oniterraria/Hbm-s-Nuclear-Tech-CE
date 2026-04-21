@@ -987,6 +987,8 @@ public class ModBlocks {
     public static final Block rbmk_gauge = new RBMKGauge("rbmk_gauge").setCreativeTab(MainRegistry.machineTab);
     public static final Block rbmk_numitron = new RBMKNumitron("rbmk_numitron").setCreativeTab(MainRegistry.machineTab);
     public static final Block rbmk_graph = new RBMKGraph("rbmk_graph").setCreativeTab(MainRegistry.machineTab);
+    public static final Block rbmk_lever = new RBMKLever("rbmk_lever").setCreativeTab(MainRegistry.machineTab);
+    public static final Block rbmk_indicator = new RBMKIndicator("rbmk_indicator").setCreativeTab(MainRegistry.machineTab);
     public static final Block rbmk_autoloader = new RBMKAutoloader("rbmk_autoloader").setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F);
     public static final Block rbmk_loader = new RBMKLoader(Material.IRON, "rbmk_loader").setHardness(15.0F).setResistance(100.0F).setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F);
     public static final Block rbmk_steam_inlet = new RBMKInlet(Material.IRON, "rbmk_steam_inlet").setCreativeTab(MainRegistry.machineTab).setHardness(50.0F).setResistance(60.0F);
@@ -1248,7 +1250,6 @@ public class ModBlocks {
     public static final Block fusion_heater = new BlockBase(Material.IRON, "fusion_heater").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block fusion_hatch = new BlockBase(Material.IRON, "fusion_hatch").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block fusion_core = new BlockBase(Material.IRON, "fusion_core_block").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab);
-    public static final Block plasma = new BlockPlasma(Material.IRON, "plasma").setHardness(5.0F).setResistance(6000.0F).setLightLevel(1.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block iter = new MachineITER("iter").setHardness(5.0F).setResistance(6000.0F).setCreativeTab(MainRegistry.machineTab);
     public static final Block plasma_heater = new MachinePlasmaHeater("plasma_heater").setHardness(5.0F).setResistance(6000.0F).setCreativeTab(MainRegistry.machineTab);
 
