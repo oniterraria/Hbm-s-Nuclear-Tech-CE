@@ -15,13 +15,37 @@
 >   - Changes, New Features correspond to a minor bump.  
 >   - Fixes/Performance/Misc correspond to a minor or patch bump.
 > - Previous public release: 2.4.0.0
-> - Next release: at least 2.4.0.1
+> - Next release: at least 2.5.0.0
 
 ### SUBSTANTIAL CHANGES
 ### Breaking Changes
+- Dropped unmaintained translation files. Supported languages are now: English, German, French, Italian, Japanese, Polish, Russian, Simplified Chinese, Ukrainian.
 ### Fixes
-- Fixed t51 texture loading
+- Fixed T-51 texture loading
+- Fixed jetpack rendering not following the player's body orientation while elytra-flying
+- Fixed industrial fans and turret biometric whitelists desyncing between client and server
+- Fixed sawmill recipe (#1424)
+- Fixed NTM tools being unable to mine bobbleheads
+- Fixed gun shader rendering under Optifine
+- Fixed turbofans applying player motion on the client even when the engine wasn't running
+- Fixed the control panel Function node's "Edit Body" button doing nothing
+- Fixed multiblock placement being blocked when the player's head merely clipped the build area, and fixed large flare-tower blocks suffocating players and allowing hostile mob spawns
+- Fixed decoration blocks (CRT, toaster, satellite-dish pole, tape recorder, misc. deco) losing their stored state when pushed/pulled by block-movers
+- Fixed control-panel composite data values retaining stale entries after reload
 ### Changes
+- On-screen info messages now render in a stable, deterministic order instead of being reordered by timing
 ### New Features
+- Ported recent upstream additions from X5671, including:
+  - New Redstone-over-Radio Pager item
+  - New Redstone-over-Radio Indicator Lights and Lever panel blocks (screwdriver-configurable), with matching manual pages
+  - Paintable fluid ducts, exhaust pipes, and pneumatic tubes now document paint and port configuration in their tooltips
+  - New lever click and electrical spark sound effects
+  - Removed the legacy Plasma block
+- Added OpenComputers integration for the RBMK Gauge, Graph, KeyPad, and Numitron
 ### Performance
+- Reduced per-tick work and network traffic. For developers: this is a substantial API change for TileEntityLoadedBase! You are now required to override (de)serializeInitial instead of vanilla updateTag methods for the correct first sync on chunk load. 
+- Sawmills now cache their recipe lookup
+- Made rendering slightly less CPU intensive
 ### Misc
+- Some localization changes
+- Reduced jar size by ~10MiB by removing unused assets
