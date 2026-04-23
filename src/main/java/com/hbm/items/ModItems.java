@@ -1421,6 +1421,7 @@ public class ModItems {
     public static final Item can_luna = new ItemEnergy("can_luna").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
     public static final Item can_bepis = new ItemEnergy("can_bepis").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
     public static final Item can_breen = new ItemEnergy("can_breen").setContainerItem(ModItems.can_empty).setCreativeTab(MainRegistry.consumableTab);
+    public static final Item can_mug = new ItemEnergy("can_mug").makeCan().setCreativeTab(MainRegistry.consumableTab);
     public static final Item drone = new ItemDrone("drone");
     //Tools
     public static final Item titanium_sword = new ItemSwordAbility(6.5F, 0, MaterialRegistry.enumToolMaterialTitanium, "titanium_sword");
