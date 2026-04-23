@@ -60,6 +60,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     private byte cachedConnMask;
     private byte cachedConnectorMask;
     private boolean cachedMasksValid;
+    private boolean computingClientMasks;
 
     public TileEntityPneumoTube() {
         super(15);
@@ -67,23 +68,44 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     }
 
     public byte getCachedConnMask(IBlockAccess access) {
+        if (access instanceof World && ((World) access).isRemote) {
+            recomputeClientMasks(access);
+            return this.cachedConnMask;
+        }
         ensureMasks(access);
         return this.cachedConnMask;
     }
 
     public byte getCachedConnectorMask(IBlockAccess access) {
+        if (access instanceof World && ((World) access).isRemote) {
+            recomputeClientMasks(access);
+            return this.cachedConnectorMask;
+        }
         ensureMasks(access);
         return this.cachedConnectorMask;
     }
 
     public void invalidateConnectionCache() {
         this.cachedMasksValid = false;
+        if (world != null && world.isRemote) {
+            world.markBlockRangeForRenderUpdate(pos, pos);
+        }
     }
 
     private void ensureMasks(IBlockAccess access) {
         if (!this.cachedMasksValid) {
             recomputeMasks(access);
             this.cachedMasksValid = true;
+        }
+    }
+
+    private void recomputeClientMasks(IBlockAccess access) {
+        if (computingClientMasks) return;
+        computingClientMasks = true;
+        try {
+            recomputeMasks(access);
+        } finally {
+            computingClientMasks = false;
         }
     }
 
@@ -97,6 +119,9 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
             int ay = pos.getY() + dir.offsetY;
             int az = pos.getZ() + dir.offsetZ;
             BlockPos adj = new BlockPos(ax, ay, az);
+            if (access instanceof World w && !w.isBlockLoaded(adj)) {
+                continue;
+            }
             TileEntity tile = access.getTileEntity(adj);
             if (tile instanceof TileEntityPneumoTube) {
                 conn |= (byte) bit;
@@ -112,7 +137,19 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
     @Override
     public void onLoad() {
         super.onLoad();
-        if(!world.isRemote) isIndirectlyPowered = world.isBlockPowered(pos);
+        if (world.isRemote) {
+            invalidateConnectionCache();
+            for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                BlockPos neighborPos = pos.add(dir.offsetX, dir.offsetY, dir.offsetZ);
+                if (!world.isBlockLoaded(neighborPos)) continue;
+                TileEntity te = world.getTileEntity(neighborPos);
+                if (te instanceof TileEntityPneumoTube tube) {
+                    tube.invalidateConnectionCache();
+                }
+            }
+        } else {
+            isIndirectlyPowered = world.isBlockPowered(pos);
+        }
     }
 
     public static int getRangeFromPressure(int pressure) {
@@ -330,10 +367,7 @@ public class TileEntityPneumoTube extends TileEntityMachineBase implements IGUIP
 
         this.whitelist = nbt.getBoolean("whitelist");
         this.redstone = nbt.getBoolean("redstone");
-        this.cachedMasksValid = false;
-        if (world != null && world.isRemote) {
-            world.markBlockRangeForRenderUpdate(pos, pos);
-        }
+        invalidateConnectionCache();
     }
 
     @Override

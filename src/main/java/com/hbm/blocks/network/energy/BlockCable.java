@@ -152,6 +152,9 @@ public class BlockCable extends BlockContainer implements IDynamicModels, ICusto
 		byte mask = 0;
 		for (EnumFacing facing : EnumFacing.VALUES) {
 			BlockPos adj = pos.offset(facing);
+			if (world instanceof World w && !w.isBlockLoaded(adj)) {
+				continue;
+			}
 			ForgeDirection dir = ForgeDirection.getOrientation(facing);
 			if (computeConnectToNeighbor(world, adj, dir)) {
 				mask |= (byte) (1 << facing.getIndex());

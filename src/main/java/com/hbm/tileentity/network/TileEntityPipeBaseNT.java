@@ -14,10 +14,12 @@ import com.hbm.uninos.UniNodespace;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
@@ -32,6 +34,9 @@ public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluid
     private boolean cachedConnectionMaskValid;
 
     public byte getCachedConnectionMask(IBlockAccess access) {
+        if (access instanceof World && ((World) access).isRemote) {
+            return computeConnectionMask(access);
+        }
         if (!this.cachedConnectionMaskValid) {
             this.cachedConnectionMask = computeConnectionMask(access);
             this.cachedConnectionMaskValid = true;
@@ -41,6 +46,13 @@ public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluid
 
     public void invalidateConnectionCache() {
         this.cachedConnectionMaskValid = false;
+        markConnectionRenderUpdate();
+    }
+
+    private void markConnectionRenderUpdate() {
+        if (world != null && world.isRemote) {
+            world.markBlockRangeForRenderUpdate(pos, pos);
+        }
     }
 
     private byte computeConnectionMask(IBlockAccess access) {
@@ -48,11 +60,30 @@ public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluid
         for (EnumFacing facing : EnumFacing.VALUES) {
             ForgeDirection dir = ForgeDirection.getOrientation(facing);
             BlockPos adj = pos.offset(facing);
+            if (access instanceof World && !((World) access).isBlockLoaded(adj)) {
+                continue;
+            }
             if (Library.canConnectFluid(access, adj, dir, this.type)) {
                 mask |= (byte) (1 << facing.getIndex());
             }
         }
         return mask;
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (world.isRemote) {
+            invalidateConnectionCache();
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                BlockPos neighborPos = pos.offset(facing);
+                if (!world.isBlockLoaded(neighborPos)) continue;
+                TileEntity te = world.getTileEntity(neighborPos);
+                if (te instanceof ICachedPipeConnections cached) {
+                    cached.invalidateConnectionCache();
+                }
+            }
+        }
     }
 
     @Override
@@ -83,7 +114,7 @@ public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluid
     public void setType(FluidType type) {
         if (this.type == type) return;
         this.type = type;
-        this.cachedConnectionMaskValid = false;
+        invalidateConnectionCache();
         this.markDirty();
 
         if (world instanceof WorldServer) {
@@ -141,7 +172,7 @@ public class TileEntityPipeBaseNT extends TileEntityLoadedBase implements IFluid
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
         this.type = Fluids.fromID(nbt.getInteger("type"));
-        this.cachedConnectionMaskValid = false;
+        invalidateConnectionCache();
     }
 
     @Override

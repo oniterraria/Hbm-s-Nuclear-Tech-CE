@@ -34,6 +34,9 @@ public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEner
     private boolean cachedConnectionMaskValid;
 
     public byte getCachedConnectionMask(IBlockAccess access) {
+        if (access instanceof World && ((World) access).isRemote) {
+            return BlockCable.computeConnectionMask(access, pos);
+        }
         if (!this.cachedConnectionMaskValid) {
             this.cachedConnectionMask = BlockCable.computeConnectionMask(access, pos);
             this.cachedConnectionMaskValid = true;
@@ -43,7 +46,30 @@ public class TileEntityCableBaseNT extends TileEntityLoadedBase implements IEner
 
     public void invalidateConnectionCache() {
         this.cachedConnectionMaskValid = false;
+        markConnectionRenderUpdate();
     }
+
+    private void markConnectionRenderUpdate() {
+        if (world != null && world.isRemote) {
+            world.markBlockRangeForRenderUpdate(pos, pos);
+        }
+    }
+
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		if (world.isRemote) {
+			invalidateConnectionCache();
+			for (EnumFacing facing : EnumFacing.VALUES) {
+				BlockPos neighborPos = pos.offset(facing);
+				if (!world.isBlockLoaded(neighborPos)) continue;
+				TileEntity te = world.getTileEntity(neighborPos);
+				if (te instanceof TileEntityCableBaseNT cable) {
+					cable.invalidateConnectionCache();
+				}
+			}
+		}
+	}
 
 	@Override
 	public void update() {

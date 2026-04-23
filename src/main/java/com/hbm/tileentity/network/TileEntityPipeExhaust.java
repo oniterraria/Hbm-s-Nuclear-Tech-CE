@@ -13,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 
 @AutoRegister
 public class TileEntityPipeExhaust extends TileEntity implements IFluidPipeMK2, ITickable, ICachedPipeConnections {
@@ -29,6 +30,9 @@ public class TileEntityPipeExhaust extends TileEntity implements IFluidPipeMK2, 
 
     @Override
     public byte getCachedConnectionMask(IBlockAccess access) {
+        if (access instanceof World && ((World) access).isRemote) {
+            return computeConnectionMask(access);
+        }
         if (!this.cachedConnectionMaskValid) {
             this.cachedConnectionMask = computeConnectionMask(access);
             this.cachedConnectionMaskValid = true;
@@ -39,6 +43,29 @@ public class TileEntityPipeExhaust extends TileEntity implements IFluidPipeMK2, 
     @Override
     public void invalidateConnectionCache() {
         this.cachedConnectionMaskValid = false;
+        markConnectionRenderUpdate();
+    }
+
+    private void markConnectionRenderUpdate() {
+        if (world != null && world.isRemote) {
+            world.markBlockRangeForRenderUpdate(pos, pos);
+        }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (world.isRemote) {
+            invalidateConnectionCache();
+            for (EnumFacing facing : EnumFacing.VALUES) {
+                BlockPos neighborPos = pos.offset(facing);
+                if (!world.isBlockLoaded(neighborPos)) continue;
+                TileEntity te = world.getTileEntity(neighborPos);
+                if (te instanceof ICachedPipeConnections cached) {
+                    cached.invalidateConnectionCache();
+                }
+            }
+        }
     }
 
     private byte computeConnectionMask(IBlockAccess access) {
@@ -47,6 +74,9 @@ public class TileEntityPipeExhaust extends TileEntity implements IFluidPipeMK2, 
         for (EnumFacing facing : EnumFacing.VALUES) {
             ForgeDirection dir = ForgeDirection.getOrientation(facing);
             BlockPos adj = pos.offset(facing);
+            if (access instanceof World w && !w.isBlockLoaded(adj)) {
+                continue;
+            }
             for (FluidType t : types) {
                 if (Library.canConnectFluid(access, adj, dir, t)) {
                     mask |= (byte) (1 << facing.getIndex());
