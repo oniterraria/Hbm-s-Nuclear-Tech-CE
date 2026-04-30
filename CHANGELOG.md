@@ -42,6 +42,7 @@
 - Restored the per-fluid tank textures that had regressed
 - Fixed multi-slot inventory tile entities (e.g. fluid tanks) crashing after generating in NBT structures
 - Fixed Experience Bottles not being convertible to Experience Juice in barrels and fluid tanks
+- Maskman now only spawns near player who have obtained or placed the Ore Acidizer
 ### Changes
 - On-screen info messages now render in a stable, deterministic order instead of being reordered by timing
 - Oil ore can no longer be silk-touched
